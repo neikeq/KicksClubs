@@ -1,0 +1,7 @@
+neikeq_clubs:
+    resource: "@NeikeqClubsBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation

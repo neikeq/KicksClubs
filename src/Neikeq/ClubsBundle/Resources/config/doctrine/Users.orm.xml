@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Neikeq\ClubsBundle\Entity\Users" table="users">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="username" type="string" column="username" length="15" nullable="false"/>
+    <field name="email" type="string" column="email" length="255" nullable="false"/>
+    <field name="password" type="string" column="password" length="255" nullable="false"/>
+    <field name="lastIp" type="string" column="last_ip" length="64" nullable="false"/>
+    <field name="creation" type="datetime" column="creation" nullable="false"/>
+    <field name="lastConnection" type="datetime" column="last_connection" nullable="true"/>
+    <field name="online" type="integer" column="online" nullable="false"/>
+    <field name="server" type="smallint" column="server" nullable="false"/>
+    <field name="kash" type="integer" column="kash" nullable="false"/>
+    <field name="settingsCamera" type="boolean" column="settings_camera" nullable="false"/>
+    <field name="settingsShadows" type="boolean" column="settings_shadows" nullable="false"/>
+    <field name="settingsNames" type="boolean" column="settings_names" nullable="false"/>
+    <field name="volEffects" type="boolean" column="vol_effects" nullable="false"/>
+    <field name="volMusic" type="boolean" column="vol_music" nullable="false"/>
+    <field name="settingsInvites" type="boolean" column="settings_invites" nullable="false"/>
+    <field name="settingsWhispers" type="boolean" column="settings_whispers" nullable="false"/>
+    <field name="settingsCountry" type="integer" column="settings_country" nullable="false"/>
+    <field name="lastCharDeletion" type="datetime" column="last_char_deletion" nullable="true"/>
+    <field name="slotOne" type="integer" column="slot_one" nullable="true"/>
+    <field name="slotTwo" type="integer" column="slot_two" nullable="true"/>
+    <field name="slotThree" type="integer" column="slot_three" nullable="true"/>
+  </entity>
+</doctrine-mapping>

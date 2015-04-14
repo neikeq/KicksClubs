@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Neikeq\ClubsBundle\Entity\Items" table="items">
+    <id name="playerId" type="integer" column="player_id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="inventoryId" type="integer" column="inventory_id" nullable="false"/>
+    <field name="itemId" type="integer" column="item_id" nullable="false"/>
+    <field name="expiration" type="integer" column="expiration" nullable="false"/>
+    <field name="bonusOne" type="integer" column="bonus_one" nullable="false"/>
+    <field name="bonusTwo" type="integer" column="bonus_two" nullable="false"/>
+    <field name="usages" type="smallint" column="usages" nullable="false"/>
+    <field name="timestampExpire" type="datetime" column="timestamp_expire" nullable="false"/>
+    <field name="selected" type="integer" column="selected" nullable="false"/>
+    <field name="visible" type="integer" column="visible" nullable="false"/>
+  </entity>
+</doctrine-mapping>

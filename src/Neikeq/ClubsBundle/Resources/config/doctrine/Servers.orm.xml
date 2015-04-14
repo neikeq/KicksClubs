@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Neikeq\ClubsBundle\Entity\Servers" table="servers">
+    <id name="id" type="smallint" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="filter" type="smallint" column="filter" nullable="false"/>
+    <field name="port" type="smallint" column="port" nullable="false"/>
+    <field name="address" type="string" column="address" length="64" nullable="false"/>
+    <field name="name" type="string" column="name" length="30" nullable="false"/>
+    <field name="minLevel" type="boolean" column="min_level" nullable="false"/>
+    <field name="maxLevel" type="boolean" column="max_level" nullable="false"/>
+    <field name="maxUsers" type="smallint" column="max_users" nullable="false"/>
+    <field name="connectedUsers" type="smallint" column="connected_users" nullable="false"/>
+    <field name="type" type="string" column="type" nullable="false"/>
+    <field name="expFactor" type="integer" column="exp_factor" nullable="false"/>
+    <field name="pointFactor" type="integer" column="point_factor" nullable="false"/>
+    <field name="kashFactor" type="integer" column="kash_factor" nullable="false"/>
+    <field name="practiceRewards" type="integer" column="practice_rewards" nullable="false"/>
+    <field name="online" type="integer" column="online" nullable="false"/>
+  </entity>
+</doctrine-mapping>

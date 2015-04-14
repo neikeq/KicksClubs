@@ -1,0 +1,27 @@
+kicks_clubs:
+    path:     /
+    defaults: { _controller: NeikeqClubsBundle:Security:login }
+
+kicks_clubs_login:
+    path:     /login/
+    defaults: { _controller: NeikeqClubsBundle:Security:login }
+
+kicks_clubs_login_check:
+    path:     /login_check/
+    defaults: { _controller: NeikeqClubsBundle:Security:loginCheck }
+
+kicks_clubs_logout:
+    path:     /logout/
+    defaults: { _controller: NeikeqClubsBundle:Security:logout }
+
+kicks_clubs_clubs:
+    path:     /clubs/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:clubs }
+
+kicks_clubs_clubs_page:
+    path:     /clubs/{page}/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:clubsPage }
+
+kicks_clubs_create:
+    path:     /create/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:create }

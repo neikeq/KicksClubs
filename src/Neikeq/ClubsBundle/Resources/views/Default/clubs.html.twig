@@ -1,0 +1,83 @@
+{% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
+
+{% block title %}List{{ parent() }}{% endblock %}
+{% block stylesheets %}{{ parent() }}{% endblock %}
+{% block javascripts %}{{ parent() }}{% endblock %}
+
+{% block navbar %}
+    {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
+{% endblock %}
+
+{% block container %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Clubs List</div>
+        <div class="panel-body">
+            {% if app.request.attributes.get('_route_params').page is defined %}
+                {% set currentPage = app.request.attributes.get('_route_params').page %}
+            {% else %}
+                {% set currentPage = 1 %}
+            {% endif %}
+
+            <div class="row">
+                <div class="col-lg-4 pull-left">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Go!</button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-2 pull-right">
+                    <select class="form-control chosen-select" name="sort_options">
+                        Sort
+                        <option>Name Desc</option>
+                        <option>Name Asc</option>
+                        <option>Creation Desc</option>
+                        <option>Creation Asc</option>
+                        <option>Members Desc</option>
+                        <option>Members Asc</option>
+                        <option>Id Desc</option>
+                        <option>Id Asc</option>
+                    </select>
+                </div>
+            </div>
+
+            <ol style="visibility:hidden;"></ol>
+
+            <table class="table table-condensed table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Manager</th>
+                        <th>Members</th>
+                        <th>Creation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for club in clubs %}
+                    <tr>
+                        <td><b>{{ club.id }}<b></td>
+                        <td>{{ club.name }}</td>
+                        <td>{{ club.manager }}</td>
+                        <td>{{ club.members }}</td>
+                        <td>{{ club.creation|localizeddate('medium', 'none', 'es-ES') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <nav>
+                <ul class="pagination">
+                    <li class="{% if currentPage == 1 %}disabled{% endif %}"><a href="/clubs/{{currentPage - 1}}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    {% for i in range(1, pages) %}
+                        <li class="{% if currentPage == i %}active{% endif %}">
+                            <a {% if currentPage != i %}href="/clubs/{{i}}{% endif %}">{{i}}<span class="sr-only">(current)</span></a>
+                        </li>
+                    {% endfor %}
+                    <li class="{% if currentPage >= pages %}disabled{% endif %}"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock %}

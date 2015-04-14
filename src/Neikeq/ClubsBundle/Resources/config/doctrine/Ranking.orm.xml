@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Neikeq\ClubsBundle\Entity\Ranking" table="ranking">
+    <id name="index" type="integer" column="index">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="matches" type="integer" column="matches" nullable="false"/>
+    <field name="wins" type="integer" column="wins" nullable="false"/>
+    <field name="draws" type="integer" column="draws" nullable="false"/>
+    <field name="points" type="integer" column="points" nullable="false"/>
+    <field name="mom" type="integer" column="mom" nullable="false"/>
+    <field name="validGoals" type="integer" column="valid_goals" nullable="false"/>
+    <field name="validAssists" type="integer" column="valid_assists" nullable="false"/>
+    <field name="validInterception" type="integer" column="valid_interception" nullable="false"/>
+    <field name="validShooting" type="integer" column="valid_shooting" nullable="false"/>
+    <field name="validStealing" type="integer" column="valid_stealing" nullable="false"/>
+    <field name="validTackling" type="integer" column="valid_tackling" nullable="false"/>
+    <field name="shooting" type="integer" column="shooting" nullable="false"/>
+    <field name="stealing" type="integer" column="stealing" nullable="false"/>
+    <field name="tackling" type="integer" column="tackling" nullable="false"/>
+    <field name="totalPoints" type="integer" column="total_points" nullable="false"/>
+    <field name="monthMatches" type="integer" column="month_matches" nullable="false"/>
+    <field name="monthWins" type="integer" column="month_wins" nullable="false"/>
+    <field name="monthDraws" type="integer" column="month_draws" nullable="false"/>
+    <field name="monthPoints" type="integer" column="month_points" nullable="false"/>
+    <field name="monthMom" type="integer" column="month_mom" nullable="false"/>
+    <field name="monthValidGoals" type="integer" column="month_valid_goals" nullable="false"/>
+    <field name="monthValidAssists" type="integer" column="month_valid_assists" nullable="false"/>
+    <field name="monthValidInterception" type="integer" column="month_valid_interception" nullable="false"/>
+    <field name="monthValidShooting" type="integer" column="month_valid_shooting" nullable="false"/>
+    <field name="monthValidStealing" type="integer" column="month_valid_stealing" nullable="false"/>
+    <field name="monthValidTackling" type="integer" column="month_valid_tackling" nullable="false"/>
+    <field name="monthShooting" type="integer" column="month_shooting" nullable="false"/>
+    <field name="monthStealing" type="integer" column="month_stealing" nullable="false"/>
+    <field name="monthTackling" type="integer" column="month_tackling" nullable="false"/>
+    <field name="monthTotalPoints" type="integer" column="month_total_points" nullable="false"/>
+  </entity>
+</doctrine-mapping>

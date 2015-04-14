@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Neikeq\ClubsBundle\Entity\Clubs" table="clubs">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="name" type="string" column="name" length="30" nullable="false"/>
+    <field name="description" type="text" column="description" nullable="false"/>
+    <field name="clubPoints" type="integer" column="club_points" nullable="false"/>
+    <field name="membershipMode" type="string" column="membership_mode" nullable="false"/>
+    <field name="uniformActive" type="integer" column="uniform_active" nullable="false"/>
+    <field name="uniformHomeShirts" type="integer" column="uniform_home_shirts" nullable="true"/>
+    <field name="uniformHomePants" type="integer" column="uniform_home_pants" nullable="true"/>
+    <field name="uniformHomeSocks" type="integer" column="uniform_home_socks" nullable="true"/>
+    <field name="uniformHomeWrist" type="integer" column="uniform_home_wrist" nullable="true"/>
+    <field name="uniformAwayShirts" type="integer" column="uniform_away_shirts" nullable="true"/>
+    <field name="uniformAwayPants" type="integer" column="uniform_away_pants" nullable="true"/>
+    <field name="uniformAwaySocks" type="integer" column="uniform_away_socks" nullable="true"/>
+    <field name="uniformAwayWrist" type="integer" column="uniform_away_wrist" nullable="true"/>
+    <field name="creation" type="datetime" column="creation" nullable="false"/>
+  </entity>
+</doctrine-mapping>

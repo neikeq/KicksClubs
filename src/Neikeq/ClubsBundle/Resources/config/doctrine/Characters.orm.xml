@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Neikeq\ClubsBundle\Entity\Characters" table="characters">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="owner" type="integer" column="owner" nullable="false"/>
+    <field name="name" type="string" column="name" length="14" nullable="false"/>
+    <field name="position" type="smallint" column="position" nullable="false"/>
+    <field name="level" type="smallint" column="level" nullable="false"/>
+    <field name="blocked" type="integer" column="blocked" nullable="false"/>
+    <field name="moderator" type="integer" column="moderator" nullable="false"/>
+    <field name="visible" type="integer" column="visible" nullable="false"/>
+    <field name="clubId" type="integer" column="club_id" nullable="false"/>
+    <field name="questCurrent" type="smallint" column="quest_current" nullable="false"/>
+    <field name="questMatchesLeft" type="smallint" column="quest_matches_left" nullable="false"/>
+    <field name="tutorialDribbling" type="boolean" column="tutorial_dribbling" nullable="false"/>
+    <field name="tutorialPassing" type="boolean" column="tutorial_passing" nullable="false"/>
+    <field name="tutorialShooting" type="boolean" column="tutorial_shooting" nullable="false"/>
+    <field name="tutorialDefense" type="boolean" column="tutorial_defense" nullable="false"/>
+    <field name="receivedReward" type="integer" column="received_reward" nullable="false"/>
+    <field name="experience" type="integer" column="experience" nullable="false"/>
+    <field name="points" type="integer" column="points" nullable="false"/>
+    <field name="ticketsKash" type="smallint" column="tickets_kash" nullable="false"/>
+    <field name="ticketsPoints" type="smallint" column="tickets_points" nullable="false"/>
+    <field name="animation" type="smallint" column="animation" nullable="false"/>
+    <field name="face" type="smallint" column="face" nullable="false"/>
+    <field name="defaultHead" type="integer" column="default_head" nullable="false"/>
+    <field name="defaultShirts" type="integer" column="default_shirts" nullable="false"/>
+    <field name="defaultPants" type="integer" column="default_pants" nullable="false"/>
+    <field name="defaultShoes" type="integer" column="default_shoes" nullable="false"/>
+    <field name="statsPoints" type="smallint" column="stats_points" nullable="false"/>
+    <field name="statsRunning" type="smallint" column="stats_running" nullable="false"/>
+    <field name="statsEndurance" type="smallint" column="stats_endurance" nullable="false"/>
+    <field name="statsAgility" type="smallint" column="stats_agility" nullable="false"/>
+    <field name="statsBallControl" type="smallint" column="stats_ball_control" nullable="false"/>
+    <field name="statsDribbling" type="smallint" column="stats_dribbling" nullable="false"/>
+    <field name="statsStealing" type="smallint" column="stats_stealing" nullable="false"/>
+    <field name="statsTackling" type="smallint" column="stats_tackling" nullable="false"/>
+    <field name="statsHeading" type="smallint" column="stats_heading" nullable="false"/>
+    <field name="statsShortShots" type="smallint" column="stats_short_shots" nullable="false"/>
+    <field name="statsLongShots" type="smallint" column="stats_long_shots" nullable="false"/>
+    <field name="statsCrossing" type="smallint" column="stats_crossing" nullable="false"/>
+    <field name="statsShortPasses" type="smallint" column="stats_short_passes" nullable="false"/>
+    <field name="statsLongPasses" type="smallint" column="stats_long_passes" nullable="false"/>
+    <field name="statsMarking" type="smallint" column="stats_marking" nullable="false"/>
+    <field name="statsGoalkeeping" type="smallint" column="stats_goalkeeping" nullable="false"/>
+    <field name="statsPunching" type="smallint" column="stats_punching" nullable="false"/>
+    <field name="statsDefense" type="smallint" column="stats_defense" nullable="false"/>
+    <field name="statusMessage" type="string" column="status_message" length="34" nullable="false"/>
+    <field name="friendsList" type="text" column="friends_list" nullable="false"/>
+    <field name="ignoredList" type="text" column="ignored_list" nullable="false"/>
+    <field name="historyMatches" type="integer" column="history_matches" nullable="false"/>
+    <field name="historyWins" type="integer" column="history_wins" nullable="false"/>
+    <field name="historyDraws" type="integer" column="history_draws" nullable="false"/>
+    <field name="historyPoints" type="integer" column="history_points" nullable="false"/>
+    <field name="historyMom" type="integer" column="history_MOM" nullable="false"/>
+    <field name="historyValidGoals" type="integer" column="history_valid_goals" nullable="false"/>
+    <field name="historyValidAssists" type="integer" column="history_valid_assists" nullable="false"/>
+    <field name="historyValidInterception" type="integer" column="history_valid_interception" nullable="false"/>
+    <field name="historyValidShooting" type="integer" column="history_valid_shooting" nullable="false"/>
+    <field name="historyValidStealing" type="integer" column="history_valid_stealing" nullable="false"/>
+    <field name="historyValidTackling" type="integer" column="history_valid_tackling" nullable="false"/>
+    <field name="historyShooting" type="integer" column="history_shooting" nullable="false"/>
+    <field name="historyStealing" type="integer" column="history_stealing" nullable="false"/>
+    <field name="historyTackling" type="integer" column="history_tackling" nullable="false"/>
+    <field name="historyTotalPoints" type="integer" column="history_total_points" nullable="false"/>
+    <field name="historyMonthMatches" type="integer" column="history_month_matches" nullable="false"/>
+    <field name="historyMonthWins" type="integer" column="history_month_wins" nullable="false"/>
+    <field name="historyMonthDraws" type="integer" column="history_month_draws" nullable="false"/>
+    <field name="historyMonthPoints" type="integer" column="history_month_points" nullable="false"/>
+    <field name="historyMonthMom" type="integer" column="history_month_MOM" nullable="false"/>
+    <field name="historyMonthValidGoals" type="integer" column="history_month_valid_goals" nullable="false"/>
+    <field name="historyMonthValidAssists" type="integer" column="history_month_valid_assists" nullable="false"/>
+    <field name="historyMonthValidInterception" type="integer" column="history_month_valid_interception" nullable="false"/>
+    <field name="historyMonthValidShooting" type="integer" column="history_month_valid_shooting" nullable="false"/>
+    <field name="historyMonthValidStealing" type="integer" column="history_month_valid_stealing" nullable="false"/>
+    <field name="historyMonthValidTackling" type="integer" column="history_month_valid_tackling" nullable="false"/>
+    <field name="historyMonthShooting" type="integer" column="history_month_shooting" nullable="false"/>
+    <field name="historyMonthStealing" type="integer" column="history_month_stealing" nullable="false"/>
+    <field name="historyMonthTackling" type="integer" column="history_month_tackling" nullable="false"/>
+    <field name="historyMonthTotalPoints" type="integer" column="history_month_total_points" nullable="false"/>
+  </entity>
+</doctrine-mapping>

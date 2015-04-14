@@ -1,0 +1,83 @@
+# you can read more about security in the related section of the documentation
+# http://symfony.com/doc/current/book/security.html
+security:
+    # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+        Neikeq\ClubsBundle\Entity\Users:
+            algorithm: pbkdf2
+            hash_algorithm: sha256
+            encode_as_base64: true
+            iterations: 1000
+            key_length: 24
+
+    # http://symfony.com/doc/current/book/security.html#hierarchical-roles
+    role_hierarchy:
+        ROLE_MEMBER:      ROLE_USER
+        ROLE_MANAGER:     ROLE_MEMBER
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        users_provider:
+            entity:
+                class: NeikeqClubsBundle:Users
+                property: username
+
+    # the main part of the security, where you can set up firewalls
+    # for specific sections of your app
+    firewalls:
+        default:
+            anonymous: ~
+            http_basic: ~
+            form_login:
+                login_path: /login/
+                check_path: /login_check
+
+                use_forward: false
+
+                always_use_default_target_path: false
+                default_target_path: /clubs/
+                target_path_parameter: _target_path
+                use_referer: false
+
+                username_parameter: _username
+                password_parameter: _password
+
+                post_only: true
+                remember_me: false
+
+                provider: users_provider
+            logout:
+                path:   /logout/
+                target: /login/
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        # the login page has to be accessible for everybody
+        demo_login:
+            pattern:  ^/demo/secured/login$
+            security: false
+
+        # secures part of the application
+        demo_secured_area:
+            pattern:    ^/demo/secured/
+            # it's important to notice that in this case _demo_security_check and _demo_login
+            # are route names and that they are specified in the AcmeDemoBundle
+            form_login:
+                check_path: _demo_security_check
+                login_path: _demo_login
+            logout:
+                path:   _demo_logout
+                target: _demo
+            #anonymous: ~
+            #http_basic:
+            #    realm: "Secured Demo Area"
+
+    # with these settings you can restrict or allow access for different parts
+    # of your application based on roles, ip, host or methods
+    # http://symfony.com/doc/current/cookbook/security/access_control.html
+    access_control:
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
