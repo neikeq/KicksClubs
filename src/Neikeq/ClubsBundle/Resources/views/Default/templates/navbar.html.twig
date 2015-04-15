@@ -37,6 +37,7 @@
 
             {% if is_granted('ROLE_USER') %}
             <ul class="nav navbar-nav navbar-right">
+                <li><a>Welcome, {{ username }}!</a></li>
                 <li><a href="/logout/">Logout</a></li>
             </ul>
             {% endif %}
