@@ -1,7 +1,8 @@
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -13,33 +14,41 @@
             <ul class="nav navbar-nav">
                 <li><a href="/clubs/">Clubs</a></li>
                 {% if is_granted('ROLE_MEMBER') %}
-                <li><a href="/myclub/">My Club</a></li>
+                    <li><a href="/myclub/">My Club</a></li>
                 {% else %}
-                <li><a href="/create/">Create</a></li>
+                    <li><a href="/create/">Create</a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_MANAGER') %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manage <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="/info/">Information</a></li>
-                        <li><a href="/members/">Members</a></li>
-                        <li class="divider"></li>
-                        <li><a href="/requests/">Requests</a></li>
-                        <li><a href="/blacklist/">Black List</a></li>
-                        <li class="divider"></li>
-                        <li><a href="/advanced/">Advanced</a></li>
-                        <li><a href="/logs/">Logs</a></li>
-                    </ul>
-                </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Manage <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/info/">Information</a></li>
+                            <li><a href="/members/">Members</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/requests/">Requests</a></li>
+                            <li><a href="/blacklist/">Black List</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/advanced/">Advanced</a></li>
+                            <li><a href="/logs/">Logs</a></li>
+                        </ul>
+                    </li>
                 {% endif %}
             </ul>
 
+            {% set currentPath = app.request.attributes.get('_route') %}
             {% if is_granted('ROLE_USER') %}
-            <ul class="nav navbar-nav navbar-right">
-                <li><a>Welcome, {{ username }}!</a></li>
-                <li><a href="/logout/">Logout</a></li>
-            </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a>Welcome, {{ username }}!</a></li>
+                    <li><a href="/logout/">Logout</a></li>
+                </ul>
+            {% elseif currentPath != 'kicks_clubs_login' and currentPath != 'kicks_clubs' %}
+                <form class="navbar-form navbar-right form-signin-nav" action="/login_check" method="post">
+                    <input type="text" class="form-control" name="_username" placeholder="Username" required>
+                    <input type="password" class="form-control" name="_password" placeholder="Password" required>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
             {% endif %}
         </div><!--/.nav-collapse -->
     </div>
