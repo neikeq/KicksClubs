@@ -2,15 +2,15 @@
 
 namespace Neikeq\ClubsBundle\Controller;
 
+use Neikeq\ClubsBundle\DependencyInjection\ClubUtils;
 use Neikeq\ClubsBundle\DependencyInjection\PlayerUtils;
 use Neikeq\ClubsBundle\DependencyInjection\PlayerRoles;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class ClubsController extends Controller
 {
-    const clubsPerPage = 5;
-
     public function clubsAction()
     {
         return $this->clubsPageAction(1);
@@ -26,33 +26,15 @@ class ClubsController extends Controller
 
         $em = $this->get('doctrine.orm.entity_manager');
 
-        // get the number of clubs registered
-        $clubsCountQB = $em->createQueryBuilder();
-        $clubsCountQB->select('count(c.id)')
-            ->from('NeikeqClubsBundle:Clubs','c');
-        $resultAllClubs = $clubsCountQB->getQuery()->getSingleScalarResult();
-
-        // get a result of clubs for the current page
-        $pageClubsQB = $em->createQueryBuilder();
-        $pageClubsQB->select('c.id, c.name, c.creation')
-           ->from('NeikeqClubsBundle:Clubs','c')
-           ->setFirstResult(($page - 1) * self::clubsPerPage)
-           ->setMaxResults(self::clubsPerPage);
-        $results = $pageClubsQB->getQuery()->getResult();
-
-        // retrieve the clubs information from the result
-        $clubs = array();
-        foreach ($results as $club) {
-            array_push($clubs, array("id" => $club['id'], "name" => $club['name'],
-                "creation" => $club['creation'], "manager" => "", "members" => ""));
-        }
+        $clubsCount = ClubUtils::clubsCount($em);
+        $clubs = ClubUtils::clubsForPage($page, $em);
 
         // if user is not authenticated, set username to empty
         $name = $playerId == null ? '' : PlayerUtils::getCharacterNameById($playerId);
 
         // params for the twig template
         $params = array('name' => $name, 'player_role' => PlayerUtils::getPlayerRole($playerId),
-            'clubs' => $clubs, 'pages' => ceil($resultAllClubs / self::clubsPerPage));
+            'clubs' => $clubs, 'pages' => ceil($clubsCount / ClubUtils::clubsPerPage));
 
         return $this->render('NeikeqClubsBundle:Default:clubs.html.twig', $params);
     }

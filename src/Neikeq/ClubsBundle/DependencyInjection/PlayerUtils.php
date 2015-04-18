@@ -3,6 +3,7 @@
 namespace Neikeq\ClubsBundle\DependencyInjection;
 
 use Doctrine\ORM\EntityManager;
+
 use Neikeq\ClubsBundle\NeikeqClubsBundle;
 
 class PlayerUtils
