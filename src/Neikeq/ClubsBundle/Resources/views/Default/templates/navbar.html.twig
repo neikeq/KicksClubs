@@ -45,7 +45,11 @@
             {% if is_granted('ROLE_USER') %}
                 <ul class="nav navbar-nav navbar-right">
                     {% if player_role|grants('CHARACTER') %}
-                        <li><a>Welcome, {{ name }}!</a></li>
+                        <li>
+                            <p class="navbar-btn">
+                                <a href="/character/" class="btn btn-info">{{ name }}</a>
+                            </p>
+                        </li>
                     {% endif %}
                     <li><a href="/logout/">Logout</a></li>
                 </ul>

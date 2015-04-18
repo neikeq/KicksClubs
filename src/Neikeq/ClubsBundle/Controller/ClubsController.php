@@ -18,7 +18,7 @@ class ClubsController extends Controller
 
     public function clubsPageAction($page)
     {
-        $playerId = $this->get('session')->get('selectedPlayerId');
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
 
         if ($this->isGranted('ROLE_USER') && PlayerUtils::mustSelectCharacter($playerId)) {
             return $this->redirect($this->generateUrl('kicks_clubs_character'));
@@ -43,7 +43,7 @@ class ClubsController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null);
 
-        $playerId = $this->get('session')->get('selectedPlayerId');
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
 
         if (PlayerUtils::mustSelectCharacter($playerId)) {
             return $this->redirect($this->generateUrl('kicks_clubs_character'));
@@ -66,20 +66,22 @@ class ClubsController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null);
 
-        $playerId = $this->get('session')->get('selectedPlayerId');
+        $user = $this->getUser();
 
-        $params = array_merge(PlayerUtils::characterList($this->getUser()),
-            array('player_role' => PlayerUtils::getPlayerRole($playerId)));
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $user);
 
-        return $this->render('NeikeqClubsBundle:Default:character.html.twig', $params);
+        $params = array('name' => PlayerUtils::getCharacterNameById($playerId),
+            'player_role' => PlayerUtils::getPlayerRole($playerId));
+
+        return $this->render('NeikeqClubsBundle:Default:character.html.twig',
+            array_merge(PlayerUtils::characterList($user), $params));
     }
 
     public function characterCheckAction(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null);
 
-        // TODO check if user is the character owner, and store slot instead of playerId
-        $this->get('session')->set('selectedPlayerId', $request->query->get('character', 1));
+        $this->get('session')->set('selectedSlot', $request->query->get('character'));
         $this->get('session')->save();
 
         return $this->redirect($this->generateUrl('kicks_clubs_clubs'));

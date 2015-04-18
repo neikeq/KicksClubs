@@ -8,6 +8,11 @@ use Neikeq\ClubsBundle\NeikeqClubsBundle;
 
 class PlayerUtils
 {
+    public static function getSelectedPlayer($session, $user)
+    {
+        return PlayerUtils::getPlayerBySlot($session->get('selectedSlot'), $user);
+    }
+
     public static function getPlayerRole($playerId)
     {
         if (self::mustSelectCharacter($playerId)) {
@@ -48,18 +53,17 @@ class PlayerUtils
         return $result['name'];
     }
 
-    public static function characterParam($playerId)
-    {
-        return array('id' => $playerId, 'name' => self::getCharacterNameById($playerId));
-    }
-
     public static function mustSelectCharacter($playerId)
     {
-        return $playerId == null || $playerId <= 0;
+        return $playerId == null;
     }
 
-    public static function getSlotByIndex($index, $user)
+    public static function getPlayerBySlot($index, $user)
     {
+        if (is_null($index)) {
+            return null;
+        }
+
         switch ($index) {
             case 0:
                 return $user->getSlotOne();
@@ -77,13 +81,14 @@ class PlayerUtils
         $characters = array();
 
         for ($i = 0; $i < 3; $i++) {
-            $playerId = self::getSlotByIndex($i, $user);
+            $playerId = self::getPlayerBySlot($i, $user);
 
-            if ($playerId != null && $playerId > 0) {
-                array_push($characters, self::characterParam($playerId));
+            if ($playerId != null) {
+                array_push($characters, array('slot' => $i,
+                    'name' => self::getCharacterNameById($playerId)));
             }
         }
 
-        return array('username' => '', 'characters' => $characters);
+        return array('name' => '', 'characters' => $characters);
     }
 }

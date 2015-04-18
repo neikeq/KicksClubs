@@ -1,6 +1,6 @@
 {% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
 
-{% block title %}Create{{ parent() }}{% endblock %}
+{% block title %}Character{{ parent() }}{% endblock %}
 {% block stylesheets %}{{ parent() }}{% endblock %}
 {% block javascripts %}{{ parent() }}{% endblock %}
 
@@ -10,12 +10,13 @@
 
 {% block container %}
     <div class="panel panel-default">
-        <form class="" role="form" action="/character_check" method="post">
+        <form class="" role="form" action="/character_check" method="get">
             <h2>Select a character</h2>
             <div class="radio">
                 {% for character in characters %}
-                    <label><input type="radio" name="character" value="{{ character.id }}">
-                        {{ character.name }}</label>
+                    <label><input type="radio" name="character" value="{{ character.slot }}"
+                        {% if loop.first %}checked{% endif %} required>{{ character.name }}
+                    </label>
                 {% endfor %}
             </div>
             <button type="submit" class="btn btn-default btn-block">Confirm</button>
