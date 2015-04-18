@@ -1,6 +1,6 @@
 kicks_clubs:
     path:     /
-    defaults: { _controller: NeikeqClubsBundle:Security:login }
+    defaults: { _controller: NeikeqClubsBundle:Security:root }
 
 kicks_clubs_login:
     path:     /login/
@@ -13,6 +13,14 @@ kicks_clubs_login_check:
 kicks_clubs_logout:
     path:     /logout/
     defaults: { _controller: NeikeqClubsBundle:Security:logout }
+
+kicks_clubs_character:
+    path:     /character/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:character }
+
+kicks_clubs_character_check:
+    path:     /character_check/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:characterCheck }
 
 kicks_clubs_clubs:
     path:     /clubs/

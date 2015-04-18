@@ -4,7 +4,6 @@ namespace Neikeq\ClubsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Neikeq\ClubsBundle\DependencyInjection\UserRoles;
 
 /**
  * Users
@@ -617,13 +616,7 @@ class Users implements UserInterface, \Serializable
 
     public function getRoles()
     {
-        $role = UserRoles::getUserRole($this->id);
-
-        if ($role == null) {
-            $role = array('ROLE_USER');
-        }
-
-        return $role;
+        return array('ROLE_USER');
     }
 
     public function getSalt()

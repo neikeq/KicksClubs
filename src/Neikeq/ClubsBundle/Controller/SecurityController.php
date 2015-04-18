@@ -6,9 +6,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class SecurityController extends Controller
 {
+    public function rootAction()
+    {
+        if ($this->isGranted('ROLE_USER')) {
+            return $this->redirect($this->generateUrl('kicks_clubs_clubs'));
+        } else {
+            return $this->redirect($this->generateUrl('kicks_clubs_login'));
+        }
+    }
+
     public function loginAction()
     {
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+        if ($this->isGranted('ROLE_USER')) {
             return $this->redirect($this->generateUrl('kicks_clubs_clubs'));
         }
 

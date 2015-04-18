@@ -1,3 +1,7 @@
+{% if not player_role is defined %}
+{% set player_role = '' %}
+{% endif %}
+
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -13,13 +17,13 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/clubs/">Clubs</a></li>
-                {% if is_granted('ROLE_MEMBER') %}
+                {% if player_role|grants('MEMBER') %}
                     <li><a href="/myclub/">My Club</a></li>
-                {% else %}
+                {% elseif is_granted('ROLE_USER') %}
                     <li><a href="/create/">Create</a></li>
                 {% endif %}
 
-                {% if is_granted('ROLE_MANAGER') %}
+                {% if player_role|grants('MANAGER') %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             Manage <span class="caret"></span></a>
@@ -40,13 +44,16 @@
             {% set currentPath = app.request.attributes.get('_route') %}
             {% if is_granted('ROLE_USER') %}
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a>Welcome, {{ username }}!</a></li>
+                    {% if player_role|grants('CHARACTER') %}
+                        <li><a>Welcome, {{ name }}!</a></li>
+                    {% endif %}
                     <li><a href="/logout/">Logout</a></li>
                 </ul>
             {% elseif currentPath != 'kicks_clubs_login' and currentPath != 'kicks_clubs' %}
                 <form class="navbar-form navbar-right form-signin-nav" action="/login_check" method="post">
                     <input type="text" class="form-control" name="_username" placeholder="Username" required>
                     <input type="password" class="form-control" name="_password" placeholder="Password" required>
+                    <input type="hidden" name="_target_path" value="/character/">
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
             {% endif %}

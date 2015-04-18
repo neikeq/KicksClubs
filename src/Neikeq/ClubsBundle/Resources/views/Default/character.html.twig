@@ -1,0 +1,24 @@
+{% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
+
+{% block title %}Create{{ parent() }}{% endblock %}
+{% block stylesheets %}{{ parent() }}{% endblock %}
+{% block javascripts %}{{ parent() }}{% endblock %}
+
+{% block navbar %}
+    {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
+{% endblock %}
+
+{% block container %}
+    <div class="panel panel-default">
+        <form class="" role="form" action="/character_check" method="post">
+            <h2>Select a character</h2>
+            <div class="radio">
+                {% for character in characters %}
+                    <label><input type="radio" name="character" value="{{ character.id }}">
+                        {{ character.name }}</label>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-default btn-block">Confirm</button>
+        </form>
+    </div>
+{% endblock %}
