@@ -4,6 +4,7 @@ namespace Neikeq\ClubsBundle\DependencyInjection;
 
 use Doctrine\ORM\EntityManager;
 
+use Neikeq\ClubsBundle\DependencyInjection\PlayerUtils;
 use Neikeq\ClubsBundle\NeikeqClubsBundle;
 
 class ClubUtils
@@ -14,7 +15,7 @@ class ClubUtils
     {
         $clubsCountQB = $em->createQueryBuilder();
         $clubsCountQB->select('count(c.id)')
-            ->from('NeikeqClubsBundle:Clubs','c');
+            ->from('NeikeqClubsBundle:Clubs', 'c');
         return $clubsCountQB->getQuery()->getSingleScalarResult();
     }
 
@@ -22,7 +23,7 @@ class ClubUtils
     {
         $pageClubsQB = $em->createQueryBuilder();
         $pageClubsQB->select('c.id, c.name, c.creation')
-           ->from('NeikeqClubsBundle:Clubs','c')
+           ->from('NeikeqClubsBundle:Clubs', 'c')
            ->setFirstResult(($page - 1) * self::clubsPerPage)
            ->setMaxResults(self::clubsPerPage);
         $results = $pageClubsQB->getQuery()->getResult();
@@ -31,10 +32,35 @@ class ClubUtils
 
         foreach ($results as $result) {
             $club = array("id" => $result['id'], "name" => $result['name'],
-                "creation" => $result['creation'], "manager" => "", "members" => "");
+                "manager" => self::clubManager($result['id'], $em),
+                "members" => self::membersCount($result['id'], $em),
+                "creation" => $result['creation']);
             array_push($clubs, $club);
         }
 
         return $clubs;
+    }
+
+    public static function clubManager($clubId, $em)
+    {
+        $pageClubsQB = $em->createQueryBuilder();
+        $pageClubsQB->select('m.playerId')
+           ->from('NeikeqClubsBundle:ClubMembers', 'm')
+           ->where('m.id = ?1')
+           ->setParameter(1, $clubId)
+           ->setMaxResults(1);
+        $managerId = $pageClubsQB->getQuery()->getSingleScalarResult();
+
+        return PlayerUtils::getCharacterNameById($managerId);
+    }
+
+    public static function membersCount($clubId, $em)
+    {
+        $pageClubsQB = $em->createQueryBuilder();
+        $pageClubsQB->select('COUNT(m.id)')
+           ->from('NeikeqClubsBundle:ClubMembers', 'm')
+           ->where('m.id = ?1')
+           ->setParameter(1, $clubId);
+        return $pageClubsQB->getQuery()->getSingleScalarResult();
     }
 }
