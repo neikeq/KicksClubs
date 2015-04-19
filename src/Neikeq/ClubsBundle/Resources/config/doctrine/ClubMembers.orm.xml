@@ -4,7 +4,7 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="playerId" type="integer" column="player_id" nullable="false"/>
+    <field name="clubId" type="integer" column="club_id" nullable="false"/>
     <field name="role" type="string" column="role" nullable="false"/>
     <field name="backNumber" type="smallint" column="back_number" nullable="false"/>
   </entity>

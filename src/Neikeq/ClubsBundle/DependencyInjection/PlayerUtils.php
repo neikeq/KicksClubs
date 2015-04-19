@@ -23,9 +23,9 @@ class PlayerUtils
 
         $qb = $em->createQueryBuilder();
 
-        $qb->select('m.id, m.role')
+        $qb->select('m.role')
            ->from('NeikeqClubsBundle:ClubMembers','m')
-           ->where('m.playerId = ?1')
+           ->where('m.id = ?1')
            ->setParameter(1, $playerId)
            ->setMaxResults(1);
 

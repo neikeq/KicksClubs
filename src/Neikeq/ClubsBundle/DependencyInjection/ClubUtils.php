@@ -44,9 +44,9 @@ class ClubUtils
     public static function clubManager($clubId, $em)
     {
         $pageClubsQB = $em->createQueryBuilder();
-        $pageClubsQB->select('m.playerId')
+        $pageClubsQB->select('m.id')
            ->from('NeikeqClubsBundle:ClubMembers', 'm')
-           ->where('m.id = ?1')
+           ->where('m.clubId = ?1')
            ->setParameter(1, $clubId)
            ->setMaxResults(1);
         $managerId = $pageClubsQB->getQuery()->getSingleScalarResult();
@@ -59,7 +59,7 @@ class ClubUtils
         $pageClubsQB = $em->createQueryBuilder();
         $pageClubsQB->select('COUNT(m.id)')
            ->from('NeikeqClubsBundle:ClubMembers', 'm')
-           ->where('m.id = ?1')
+           ->where('m.clubId = ?1')
            ->setParameter(1, $clubId);
         return $pageClubsQB->getQuery()->getSingleScalarResult();
     }

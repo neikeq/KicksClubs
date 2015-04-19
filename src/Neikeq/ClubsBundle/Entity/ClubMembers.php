@@ -18,7 +18,7 @@ class ClubMembers
     /**
      * @var integer
      */
-    private $playerId;
+    private $clubId;
 
     /**
      * @var string
@@ -31,26 +31,26 @@ class ClubMembers
     private $backNumber;
 
     /**
-     * Set playerId
+     * Set clubId
      *
-     * @param integer $playerId
+     * @param integer $clubId
      * @return ClubMembers
      */
-    public function setPlayerId($playerId)
+    public function setClubId($clubId)
     {
-        $this->playerId = $playerId;
+        $this->clubId = $clubId;
 
         return $this;
     }
 
     /**
-     * Get playerId
+     * Get clubId
      *
      * @return integer
      */
-    public function getPlayerId()
+    public function getClubId()
     {
-        return $this->playerId;
+        return $this->clubId;
     }
 
     /**
