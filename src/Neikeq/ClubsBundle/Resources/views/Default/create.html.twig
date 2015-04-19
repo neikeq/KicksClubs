@@ -2,14 +2,84 @@
 
 {% block title %}Create{{ parent() }}{% endblock %}
 {% block stylesheets %}{{ parent() }}{% endblock %}
-{% block javascripts %}{{ parent() }}{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+{% javascripts '@NeikeqClubsBundle/Resources/public/js/popover.js' %}
+    <script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}
 
 {% block navbar %}
     {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
 {% endblock %}
 
+{% set membership_popover %}
+    {% filter escape %}
+        {% include 'NeikeqClubsBundle:Default:templates/membership.html.twig' %}
+    {% endfilter %}
+{% endset %}
+
 {% block container %}
     <div class="panel panel-default">
-        
+        <div class="panel-body">
+            <legend>Club creation</legend>
+
+            <form class="form-horizontal form-club" role="form" action="/creation_check" method="post">
+                <div class="form-group">
+                    <div class="col-xs-3 text-right">
+                        <label>Club name:</label>
+                    </div>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" id="inputClubName" name="club_name"
+                            placeholder="Club name" required autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-3 text-right">
+                        <label>Membership mode:</label>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="membership" value="APPROVED" checked required>
+                                Approved
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="membership" value="IMMEDIATE" required>
+                                Immediate
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="membership" value="DISCONTINUED" required>
+                                Discontinued
+                            </label>
+                        </div>
+
+                        <a tabindex="0" class="btn btn-link" role="button" data-container="body" data-toggle="popover"
+                            data-trigger="hover" data-placement="right" data-html="true" data-content="{{ membership_popover }}">
+                            ?
+                        </a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-3 text-right">
+                        <label>Description:</label>
+                    </div>
+                    <div class="col-xs-9">
+                        <textarea class="form-control resizable-vertical" name="description"
+                            rows="3" placeholder="Club description">
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-3"></div>
+                    <div class="col-xs-9">
+                        <button type="submit" class="btn btn-lg btn-primary col-lg-5">Create</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}

@@ -10,20 +10,18 @@
 
 {% block container %}
     <div class="panel panel-default login-panel col-lg-5">
-        <div class="panel-body absolute-center">
+        <div class="panel-body">
+            <legend>Select a character</legend>
             <form class="form-signin" role="form" action="/character_check" method="get">
-                <h3 class="form-signin-heading">Select a character</h3>
-                <div class="radio form-control">
+                <div class="btn-group btn-group-justified">
                     {% for character in characters %}
-                        <label>
-                            <input type="radio" name="character" value="{{ character.slot }}"
-                                {% if loop.first %}checked{% endif %} required>
-                            {{ character.name }}
-                        </label>
+                        <div class="btn-group" role="group">
+                            <button type="submit" class="btn btn-info" name="character" value="{{ character.slot }}">
+                                {{ character.name }}
+                            </button>
+                        </div>
                     {% endfor %}
                 </div>
-
-                <button type="submit" class="btn btn-info btn-block">Confirm</button>
             </form>
         </div>
     </div>
