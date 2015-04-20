@@ -5,6 +5,8 @@ namespace Neikeq\ClubsBundle\DependencyInjection;
 use Doctrine\ORM\EntityManager;
 
 use Neikeq\ClubsBundle\DependencyInjection\PlayerUtils;
+use Neikeq\ClubsBundle\Entity\Clubs;
+use Neikeq\ClubsBundle\Entity\ClubMembers;
 use Neikeq\ClubsBundle\NeikeqClubsBundle;
 
 class ClubUtils
@@ -17,6 +19,17 @@ class ClubUtils
         $clubsCountQB->select('count(c.id)')
             ->from('NeikeqClubsBundle:Clubs', 'c');
         return $clubsCountQB->getQuery()->getSingleScalarResult();
+    }
+
+    public static function clubAlreadyExists($name, $em)
+    {
+        $qb = $em->createQueryBuilder();
+        $qb->select('c.id')
+            ->from('NeikeqClubsBundle:Clubs', 'c')
+            ->where('c.name = ?1')
+            ->setParameter(1, $name)
+            ->setMaxResults(1);
+        return !is_null($qb->getQuery()->getOneOrNullResult());
     }
 
     public static function clubsForPage($page, $em)
@@ -51,7 +64,7 @@ class ClubUtils
            ->setMaxResults(1);
         $managerId = $pageClubsQB->getQuery()->getSingleScalarResult();
 
-        return PlayerUtils::getCharacterNameById($managerId);
+        return PlayerUtils::getCharacterInfoById($managerId)['name'];
     }
 
     public static function membersCount($clubId, $em)
@@ -62,5 +75,28 @@ class ClubUtils
            ->where('m.clubId = ?1')
            ->setParameter(1, $clubId);
         return $pageClubsQB->getQuery()->getSingleScalarResult();
+    }
+
+    public static function createClub($clubName, $membershipMode, $description, $em)
+    {
+        $club = new Clubs();
+        $club->setName($clubName);
+        $club->setMembershipMode($membershipMode);
+        $club->setDescription($description);
+
+        $em->persist($club);
+        $em->flush();
+
+        return $club->getId();
+    }
+
+    public static function addClubMember($playerId, $clubId, $role, $em) {
+        $clubMember = new ClubMembers();
+        $clubMember->setId($playerId);
+        $clubMember->setClubId($clubId);
+        $clubMember->setRole($role);
+
+        $em->persist($clubMember);
+        $em->flush();
     }
 }

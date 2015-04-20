@@ -22,7 +22,7 @@ class Clubs
     /**
      * @var integer
      */
-    private $clubPoints;
+    private $clubPoints = 0;
 
     /**
      * @var string
@@ -32,7 +32,7 @@ class Clubs
     /**
      * @var integer
      */
-    private $uniformActive;
+    private $uniformActive = 0;
 
     /**
      * @var integer
@@ -101,7 +101,7 @@ class Clubs
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -124,7 +124,7 @@ class Clubs
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -147,7 +147,7 @@ class Clubs
     /**
      * Get clubPoints
      *
-     * @return integer 
+     * @return integer
      */
     public function getClubPoints()
     {
@@ -170,7 +170,7 @@ class Clubs
     /**
      * Get membershipMode
      *
-     * @return string 
+     * @return string
      */
     public function getMembershipMode()
     {
@@ -193,7 +193,7 @@ class Clubs
     /**
      * Get uniformActive
      *
-     * @return integer 
+     * @return integer
      */
     public function getUniformActive()
     {
@@ -216,7 +216,7 @@ class Clubs
     /**
      * Get uniformHomeShirts
      *
-     * @return integer 
+     * @return integer
      */
     public function getUniformHomeShirts()
     {
@@ -239,7 +239,7 @@ class Clubs
     /**
      * Get uniformHomePants
      *
-     * @return integer 
+     * @return integer
      */
     public function getUniformHomePants()
     {
@@ -262,7 +262,7 @@ class Clubs
     /**
      * Get uniformHomeSocks
      *
-     * @return integer 
+     * @return integer
      */
     public function getUniformHomeSocks()
     {
@@ -285,7 +285,7 @@ class Clubs
     /**
      * Get uniformHomeWrist
      *
-     * @return integer 
+     * @return integer
      */
     public function getUniformHomeWrist()
     {
@@ -308,7 +308,7 @@ class Clubs
     /**
      * Get uniformAwayShirts
      *
-     * @return integer 
+     * @return integer
      */
     public function getUniformAwayShirts()
     {
@@ -331,7 +331,7 @@ class Clubs
     /**
      * Get uniformAwayPants
      *
-     * @return integer 
+     * @return integer
      */
     public function getUniformAwayPants()
     {
@@ -354,7 +354,7 @@ class Clubs
     /**
      * Get uniformAwaySocks
      *
-     * @return integer 
+     * @return integer
      */
     public function getUniformAwaySocks()
     {
@@ -377,7 +377,7 @@ class Clubs
     /**
      * Get uniformAwayWrist
      *
-     * @return integer 
+     * @return integer
      */
     public function getUniformAwayWrist()
     {
@@ -400,7 +400,7 @@ class Clubs
     /**
      * Get creation
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreation()
     {
@@ -410,7 +410,7 @@ class Clubs
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {

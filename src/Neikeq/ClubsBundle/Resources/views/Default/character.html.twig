@@ -12,7 +12,7 @@
     <div class="panel panel-default login-panel col-lg-5">
         <div class="panel-body">
             <legend>Select a character</legend>
-            <form class="form-signin" role="form" action="/character_check" method="get">
+            <form class="form-signin" role="form" action="{{ path('kicks_clubs_character_check') }}" method="post">
                 <div class="btn-group btn-group-justified">
                     {% for character in characters %}
                         <div class="btn-group" role="group">

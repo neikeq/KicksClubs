@@ -38,19 +38,19 @@ class PlayerUtils
         return 'CHARACTER';
     }
 
-    public static function getCharacterNameById($playerId)
+    public static function getCharacterInfoById($playerId)
     {
         $em = NeikeqClubsBundle::getEm();
 
         $characterQB = $em->createQueryBuilder();
-        $characterQB->select('c.name')
+        $characterQB->select('c.name, c.level')
            ->from('NeikeqClubsBundle:Characters','c')
            ->where('c.id = ?1')
            ->setParameter(1, $playerId)
            ->setMaxResults(1);
         $result = $characterQB->getQuery()->getOneOrNullResult();
 
-        return $result['name'];
+        return array('name' => $result['name'], 'level' => $result['level']);
     }
 
     public static function mustSelectCharacter($playerId)
@@ -85,7 +85,7 @@ class PlayerUtils
 
             if ($playerId != null) {
                 array_push($characters, array('slot' => $i,
-                    'name' => self::getCharacterNameById($playerId)));
+                    'name' => self::getCharacterInfoById($playerId)['name']));
             }
         }
 

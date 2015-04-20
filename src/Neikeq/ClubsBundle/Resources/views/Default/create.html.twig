@@ -20,66 +20,85 @@
 {% endset %}
 
 {% block container %}
+    {% if errors is defined %}
+        <div class="alert alert-danger" role="alert">
+            {% for error in errors %}
+                <p>
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>{{ error }}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="panel panel-default">
         <div class="panel-body">
             <legend>Club creation</legend>
 
-            <form class="form-horizontal form-club" role="form" action="/creation_check" method="post">
-                <div class="form-group">
-                    <div class="col-xs-3 text-right">
-                        <label>Club name:</label>
-                    </div>
-                    <div class="col-xs-9">
-                        <input type="text" class="form-control" id="inputClubName" name="club_name"
-                            placeholder="Club name" required autofocus>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-xs-3 text-right">
-                        <label>Membership mode:</label>
-                    </div>
-                    <div class="col-xs-9">
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-primary active">
-                                <input type="radio" name="membership" value="APPROVED" checked required>
-                                Approved
-                            </label>
-                            <label class="btn btn-primary">
-                                <input type="radio" name="membership" value="IMMEDIATE" required>
-                                Immediate
-                            </label>
-                            <label class="btn btn-primary">
-                                <input type="radio" name="membership" value="DISCONTINUED" required>
-                                Discontinued
-                            </label>
+            {% if player.level >= 25 %}
+                <form class="form-horizontal form-club" role="form" action="{{ path('kicks_clubs_create_check') }}" method="post">
+                    <div class="form-group">
+                        <div class="col-xs-3 text-right">
+                            <label>Club name:</label>
                         </div>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" maxlength="14" name="club_name"
+                                {% if last_club_name is defined %}value="{{ last_club_name }}"{% endif %}
+                                placeholder="Club name" required autofocus>
+                        </div>
+                    </div>
 
-                        <a tabindex="0" class="btn btn-link" role="button" data-container="body" data-toggle="popover"
-                            data-trigger="hover" data-placement="right" data-html="true" data-content="{{ membership_popover }}">
-                            ?
-                        </a>
-                    </div>
-                </div>
+                    <div class="form-group">
+                        <div class="col-xs-3 text-right">
+                            <label>Membership mode:</label>
+                        </div>
+                        <div class="col-xs-9">
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="membership" value="APPROVED" checked required>
+                                    Approved
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="membership" value="IMMEDIATE" required>
+                                    Immediate
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="membership" value="DISCONTINUED" required>
+                                    Discontinued
+                                </label>
+                            </div>
 
-                <div class="form-group">
-                    <div class="col-xs-3 text-right">
-                        <label>Description:</label>
+                            <a tabindex="0" class="btn btn-link" role="button" data-container="body"
+                                data-toggle="popover" data-trigger="hover" data-placement="right"
+                                data-html="true" data-content="{{ membership_popover }}">
+                                ?
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-xs-9">
-                        <textarea class="form-control resizable-vertical" name="description"
-                            rows="3" placeholder="Club description">
-                        </textarea>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="col-xs-3"></div>
-                    <div class="col-xs-9">
-                        <button type="submit" class="btn btn-lg btn-primary col-lg-5">Create</button>
+                    <div class="form-group">
+                        <div class="col-xs-3 text-right">
+                            <label>Description:</label>
+                        </div>
+                        <div class="col-xs-9">
+                            {% if not last_description is defined %}
+                                {% set last_description = '' %}
+                            {% endif %}
+                            <textarea class="form-control resizable-vertical" name="description" rows="3"
+                                maxlength="512" placeholder="Club description" required>{{ last_description }}</textarea>
+                        </div>
                     </div>
-                </div>
-            </form>
+
+                    <div class="form-group">
+                        <div class="col-xs-3"></div>
+                        <div class="col-xs-9">
+                            <button type="submit" class="btn btn-lg btn-primary col-lg-5">Create</button>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <label>You do not meet the level requirements to create a club.</label>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

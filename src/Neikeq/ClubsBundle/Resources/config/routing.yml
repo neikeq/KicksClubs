@@ -33,3 +33,7 @@ kicks_clubs_clubs_page:
 kicks_clubs_create:
     path:     /create/
     defaults: { _controller: NeikeqClubsBundle:Clubs:create }
+
+kicks_clubs_create_check:
+    path:     /create_check/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:createCheck }
