@@ -1,8 +1,67 @@
 {% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
 
-{% block title %}List{{ parent() }}{% endblock %}
+{% block title %}Clubs{{ parent() }}{% endblock %}
 {% block stylesheets %}{{ parent() }}{% endblock %}
-{% block javascripts %}{{ parent() }}{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+    $(document).ready(function(){
+        $('#clubModal').modal({
+            keyboard: true,
+            show: false,
+        }).on('show.bs.modal', function(){
+            var clubId = $('#clubModal').data('clubId');
+
+            $.ajax({
+                url: "{{ path('kicks_clubs_ajax_club_info') }}" ,
+                type: "POST",
+                data: { 'club_id' : clubId },
+                beforeSend : function() {
+                    document.getElementById('clubView').style.display = 'none';
+
+                    $('#clubModal').find('#clubName').html('Loading...');
+                },
+                success : function(result) {
+                    var clubInfo = result;
+
+                    document.getElementById('clubView').style.display = 'block';
+
+                    $('#clubModal').find('#inputClubId').val(clubId);
+                    $('#clubModal').find('#clubName').html(clubInfo['name']);
+                    $('#clubModal').find('#clubManager').html(clubInfo['manager']);
+                    $('#clubModal').find('#clubCreation').html(clubInfo['creation']);
+                    $('#clubModal').find('#clubMembers').html(clubInfo['members'].length);
+                    $('#clubModal').find('#clubMembership').html(clubInfo['membership']);
+                    $('#clubModal').find('#clubDescription').html(clubInfo['description']);
+
+                    var memberRows = '';
+
+                    for (i = 0; i < clubInfo['members'].length; i++) {
+                        var member = clubInfo['members'][i];
+
+                        memberRows += '\
+                            <tr>\
+                                <td class="col-md-5">' + member['name'] + '</td>\
+                                <td class="col-md-2">' + member['level'] + '</td>\
+                                <td class="col-md-2">' + member['position'] + '</td>\
+                                <td class="col-md-2">' + member['role'] + '</td>\
+                            </tr>';
+                    }
+
+                    $('#clubModal').find('#clubMemberRows').html($(memberRows));
+                },
+                error : function(textStatus, errorThrows) {
+                    $('#clubModal').find('#clubName').html('Could not load club info!');
+                }
+            });
+        });
+
+        $(".table-clubs").find('tr[data-target]').on('click', function(){
+            $('#clubModal').data('clubId', $(this).data('id'));
+        });
+    });
+</script>
+{% endblock %}
 
 {% block navbar %}
     {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
@@ -44,7 +103,7 @@
 
             <ol style="visibility:hidden;"></ol>
 
-            <table class="table table-condensed table-hover table-bordered">
+            <table class="table table-hover table-bordered table-clubs">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -56,28 +115,126 @@
                 </thead>
                 <tbody>
                     {% for club in clubs %}
-                    <tr>
-                        <td><b>{{ club.id }}<b></td>
-                        <td>{{ club.name }}</td>
-                        <td>{{ club.manager }}</td>
-                        <td>{{ club.members }}</td>
-                        <td>{{ club.creation|localizeddate('medium', 'none', 'es-ES') }}</td>
-                    </tr>
+                        <tr class="clickable-row" data-toggle="modal" data-id="{{ club.id }}" data-target="#clubModal">
+                            <td class="col-md-1"><b>{{ club.id }}<b></td>
+                            <td class="col-md-5">{{ club.name }}</td>
+                            <td class="col-md-2">{{ club.manager }}</td>
+                            <td class="col-md-1">{{ club.members }}</td>
+                            <td class="col-md-1">{{ club.creation }}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
 
             <nav>
                 <ul class="pagination">
-                    <li class="{% if currentPage == 1 %}disabled{% endif %}"><a href="/clubs/{{currentPage - 1}}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                    <li class="{% if currentPage == 1 %}disabled{% endif %}">
+                        <a href="/clubs/{{currentPage - 1}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
                     {% for i in range(1, pages) %}
                         <li class="{% if currentPage == i %}active{% endif %}">
-                            <a {% if currentPage != i %}href="/clubs/{{i}}{% endif %}">{{i}}<span class="sr-only">(current)</span></a>
+                            <a {% if currentPage != i %}href="/clubs/{{i}}{% endif %}">
+                                {{i}}
+                                <span class="sr-only">(current)</span>
+                            </a>
                         </li>
                     {% endfor %}
-                    <li class="{% if currentPage >= pages %}disabled{% endif %}"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                    <li class="{% if currentPage >= pages %}disabled{% endif %}">
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
+        </div>
+    </div>
+
+    <div id="clubModal" class="modal fade" role="dialog" aria-labelledby="clubModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="clubName" class="modal-title">Club View</h4>
+                    {% if not player.role|grants('MEMBER') %}
+                        <form action="{{ path('kicks_clubs_join') }}" method="post" data-dismiss="modal" aria-hidden="true">
+                            <input id ="inputClubId" type="hidden" name="club_id">
+                            <button type="submit" class="btn btn-danger btn-sm pull-right">Join</button>
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="modal-body">
+                    <div id="clubViewHide" style="display: none"></div>
+                    <div id="clubView" role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#info" aria-controls="info" role="tab" data-toggle="tab">
+                                    Information
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#members" aria-controls="members" role="tab" data-toggle="tab">
+                                    Members
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div style="overflow: hidden" class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="info">
+                                <div style="padding: 25px" class="col-md-12 col-lg-12">
+                                    <div style="margin-left: 20px; margin-right:20px;" class="col-md-3 col-lg-3">
+                                        <img src="http://kicksonline.eu/assets/master/images/logo.png"
+                                             alt="Club Logo">
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
+                                        <legend>Information</legend>
+                                        <table class="table table-club-info">
+                                            <tbody>
+                                            <tr>
+                                                <td>Club Manager:</td>
+                                                <td id="clubManager"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Creation date:</td>
+                                                <td id="clubCreation"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Members:</td>
+                                                <td id="clubMembers"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Membership mode:</td>
+                                                <td id="clubMembership"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="col-md-12 col-lg-12">
+                                        <legend>Description</legend>
+                                        <div class="well" id="clubDescription"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="padding-top: 25px" role="tabpanel" class="tab-pane" id="members">
+                                <table class="table table-hover table-bordered table-clubs">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Level</th>
+                                            <th>Position</th>
+                                            <th>Role</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="clubMemberRows"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

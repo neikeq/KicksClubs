@@ -1,0 +1,98 @@
+{% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
+
+{% block title %}My Club{{ parent() }}{% endblock %}
+{% block stylesheets %}{{ parent() }}{% endblock %}
+{% block javascripts %}{{ parent() }}{% endblock %}
+
+{% block navbar %}
+    {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
+{% endblock %}
+
+{% block container %}
+    <div class="panel panel-default">
+        <div class="panel-heading club-name">
+            <center><b>{{ club.name }}</b></center>
+        </div>
+        <div class="panel-body">
+            <div role="tabpanel">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#info" aria-controls="info" role="tab" data-toggle="tab">
+                            Information
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#members" aria-controls="members" role="tab" data-toggle="tab">
+                            Members
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div  style="overflow: hidden" class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="info">
+                        <div style="padding: 25px" class="col-md-12 col-lg-12">
+                            <div style="margin-left: 20px; margin-right:20px;" class="col-md-3 col-lg-3">
+                                <img src="http://kicksonline.eu/assets/master/images/logo.png"
+                                     alt="Club Logo">
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <legend>Information</legend>
+                                <table class="table table-club-info">
+                                    <tbody>
+                                    <tr>
+                                        <td>Club Manager:</td>
+                                        <td>{{ club.manager }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Creation date:</td>
+                                        <td>{{ club.creation }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Members:</td>
+                                        <td>{{ club.members|length }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Membership mode:</td>
+                                        <td>{{ club.membership }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-12 col-lg-12">
+                                <legend>Description</legend>
+                                <div class="well">
+                                    {{ club.description }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding-top: 25px" role="tabpanel" class="tab-pane" id="members">
+                        <table class="table table-hover table-bordered table-clubs">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Level</th>
+                                    <th>Position</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for member in club.members %}
+                                    <tr>
+                                        <td class="col-md-5">{{ member.name }}</td>
+                                        <td class="col-md-2">{{ member.level }}</td>
+                                        <td class="col-md-2">{{ member.position }}</td>
+                                        <td class="col-md-2">{{ member.role }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

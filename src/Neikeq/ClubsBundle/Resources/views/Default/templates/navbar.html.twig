@@ -18,7 +18,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="/clubs/">Clubs</a></li>
                 {% if player.role|grants('MEMBER') %}
-                    <li><a href="/myclub/">My Club</a></li>
+                    <li><a href="/club/">My Club</a></li>
                 {% elseif is_granted('ROLE_USER') %}
                     <li><a href="/create/">Create</a></li>
                 {% endif %}

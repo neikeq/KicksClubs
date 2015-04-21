@@ -1,0 +1,12 @@
+<div class="panel panel-default">
+    <div class="panel-heading club-name">
+        <b>{{ club.name }}</b>
+        <form style="display: inline" action="{{ path('kicks_clubs_join') }}">
+            <input type="hidden" name="club_id" value="{{ club.id }}">
+            <button type="submit" class="btn btn-danger btn-sm pull-right">Join</button>
+        </form>
+    </div>
+    <div class="panel-body">
+
+    </div>
+</div>

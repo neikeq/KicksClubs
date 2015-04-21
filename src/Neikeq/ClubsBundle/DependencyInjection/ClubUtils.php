@@ -13,6 +13,39 @@ class ClubUtils
 {
     const clubsPerPage = 5;
 
+    public static function clubView($clubId, $em)
+    {
+        $club = $em->getRepository('NeikeqClubsBundle:Clubs')->find($clubId);
+
+        $members = self::clubMembersInfo($clubId, $em);
+
+        return array(
+            'name' => $club->getName(),
+            'description' => $club->getDescription(),
+            'membership' => $club->getMembershipMode(),
+            'creation' => $club->getCreation()->format('Y-m-d'),
+            'manager' => self::clubManager($clubId, $em),
+            'members' => $members
+        );
+    }
+
+    public static function clubMembersInfo($clubId, $em)
+    {
+        $clubMembers = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+            ->findBy(array('clubId' => $clubId));
+
+        $clubMembersInfo = array();
+
+        foreach ($clubMembers as $clubMember) {
+            $memberInfo = PlayerUtils::getCharacterInfoById($clubMember->getId());
+            $memberInfo['role'] = $clubMember->getRole();
+
+            array_push($clubMembersInfo, $memberInfo);
+        }
+
+        return $clubMembersInfo;
+    }
+
     public static function clubsCount($em)
     {
         $clubsCountQB = $em->createQueryBuilder();
@@ -47,7 +80,7 @@ class ClubUtils
             $club = array("id" => $result['id'], "name" => $result['name'],
                 "manager" => self::clubManager($result['id'], $em),
                 "members" => self::membersCount($result['id'], $em),
-                "creation" => $result['creation']);
+                "creation" => $result['creation']->format('Y-m-d'));
             array_push($clubs, $club);
         }
 
@@ -60,6 +93,7 @@ class ClubUtils
         $pageClubsQB->select('m.id')
            ->from('NeikeqClubsBundle:ClubMembers', 'm')
            ->where('m.clubId = ?1')
+           ->andWhere('m.role = \'MANAGER\'')
            ->setParameter(1, $clubId)
            ->setMaxResults(1);
         $managerId = $pageClubsQB->getQuery()->getSingleScalarResult();

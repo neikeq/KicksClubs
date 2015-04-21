@@ -32,8 +32,20 @@ kicks_clubs_clubs_page:
 
 kicks_clubs_create:
     path:     /create/
-    defaults: { _controller: NeikeqClubsBundle:Clubs:create }
+    defaults: { _controller: NeikeqClubsBundle:Creation:create }
 
 kicks_clubs_create_check:
     path:     /create_check/
-    defaults: { _controller: NeikeqClubsBundle:Clubs:createCheck }
+    defaults: { _controller: NeikeqClubsBundle:Creation:createCheck }
+
+kicks_clubs_club:
+    path:     /club/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:club }
+
+kicks_clubs_ajax_club_info:
+    path:     /ajax/clubinfo/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:ajaxClubInfo }
+
+kicks_clubs_join:
+    path:     /join/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:join }

@@ -40,17 +40,19 @@ class PlayerUtils
 
     public static function getCharacterInfoById($playerId)
     {
+        if (self::mustSelectCharacter($playerId)) {
+            return array();
+        }
+
         $em = NeikeqClubsBundle::getEm();
 
-        $characterQB = $em->createQueryBuilder();
-        $characterQB->select('c.name, c.level')
-           ->from('NeikeqClubsBundle:Characters','c')
-           ->where('c.id = ?1')
-           ->setParameter(1, $playerId)
-           ->setMaxResults(1);
-        $result = $characterQB->getQuery()->getOneOrNullResult();
+        $player = $em->getRepository('NeikeqClubsBundle:Characters')->find($playerId);
 
-        return array('name' => $result['name'], 'level' => $result['level']);
+        return array(
+            'name' => $player->getName(),
+            'level' => $player->getLevel(),
+            'position' => $player->getPosition()
+        );
     }
 
     public static function mustSelectCharacter($playerId)
