@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManager;
 use Neikeq\ClubsBundle\DependencyInjection\PlayerUtils;
 use Neikeq\ClubsBundle\Entity\Clubs;
 use Neikeq\ClubsBundle\Entity\ClubMembers;
-use Neikeq\ClubsBundle\NeikeqClubsBundle;
 
 class ClubUtils
 {
@@ -37,7 +36,7 @@ class ClubUtils
         $clubMembersInfo = array();
 
         foreach ($clubMembers as $clubMember) {
-            $memberInfo = PlayerUtils::getCharacterInfoById($clubMember->getId());
+            $memberInfo = PlayerUtils::getCharacterInfo($clubMember->getId(), $em);
             $memberInfo['role'] = $clubMember->getRole();
 
             array_push($clubMembersInfo, $memberInfo);
@@ -98,7 +97,7 @@ class ClubUtils
            ->setMaxResults(1);
         $managerId = $pageClubsQB->getQuery()->getSingleScalarResult();
 
-        return PlayerUtils::getCharacterInfoById($managerId)['name'];
+        return PlayerUtils::getCharacterInfo($managerId, $em)['name'];
     }
 
     public static function membersCount($clubId, $em)

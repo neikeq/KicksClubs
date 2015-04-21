@@ -155,13 +155,14 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 id="clubName" class="modal-title">Club View</h4>
-                    {% if not player.role|grants('MEMBER') %}
-                        <form action="{{ path('kicks_clubs_join') }}" method="post" data-dismiss="modal" aria-hidden="true">
+                    {% if is_granted('ROLE_USER') and not player.role|grants('MEMBER') %}
+                        <form action="{{ path('kicks_clubs_join') }}"
+                            method="post" data-dismiss="modal" aria-hidden="true">
                             <input id ="inputClubId" type="hidden" name="club_id">
                             <button type="submit" class="btn btn-danger btn-sm pull-right">Join</button>
                         </form>
                     {% endif %}
+                    <h4 id="clubName" class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
                     <div id="clubViewHide" style="display: none"></div>

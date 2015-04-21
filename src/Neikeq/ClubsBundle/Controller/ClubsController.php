@@ -26,14 +26,14 @@ class ClubsController extends Controller
             return $this->redirect($this->generateUrl('kicks_clubs_character'));
         }
 
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
 
         $clubsCount = ClubUtils::clubsCount($em);
         $clubs = ClubUtils::clubsForPage($page, $em);
 
         // if user is not authenticated, set username to empty
-        $playerInfo = $playerId == null ? array() : PlayerUtils::getCharacterInfoById($playerId);
-        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId);
+        $playerInfo = $playerId == null ? array() : PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
 
         // params for the twig template
         $params = array('player' => $playerInfo, 'clubs' => $clubs,
@@ -46,15 +46,17 @@ class ClubsController extends Controller
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null);
 
+        $em = $this->getDoctrine()->getManager();
+
         $user = $this->getUser();
 
         $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $user);
 
-        $playerInfo = PlayerUtils::getCharacterInfoById($playerId);
-        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId);
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
 
         return $this->render('NeikeqClubsBundle:Default:character.html.twig',
-            array_merge(PlayerUtils::characterList($user), array('player' => $playerInfo)));
+            array_merge(PlayerUtils::characterList($user, $em), array('player' => $playerInfo)));
     }
 
     public function characterCheckAction(Request $request)
@@ -77,15 +79,15 @@ class ClubsController extends Controller
             return $this->redirect($this->generateUrl('kicks_clubs_character'));
         }
 
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
 
         $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId);
 
         $clubInfo = ClubUtils::clubView($clubMember->getClubId(), $em);
 
         // if user is not authenticated, set username to empty
-        $playerInfo = $playerId == null ? array() : PlayerUtils::getCharacterInfoById($playerId);
-        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId);
+        $playerInfo = $playerId == null ? array() : PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
 
         // params for the twig template
         $params = array('player' => $playerInfo, 'club' => $clubInfo);
@@ -96,7 +98,7 @@ class ClubsController extends Controller
     public function ajaxClubInfoAction(Request $request)
     {
         if ($request->isXMLHttpRequest()) {
-            $em = $this->get('doctrine.orm.entity_manager');
+            $em = $this->getDoctrine()->getManager();
 
             return new JsonResponse(ClubUtils::clubView($request->request->get('club_id'), $em));
         }

@@ -4,8 +4,6 @@ namespace Neikeq\ClubsBundle\DependencyInjection;
 
 use Doctrine\ORM\EntityManager;
 
-use Neikeq\ClubsBundle\NeikeqClubsBundle;
-
 class PlayerUtils
 {
     public static function getSelectedPlayer($session, $user)
@@ -13,38 +11,26 @@ class PlayerUtils
         return PlayerUtils::getPlayerBySlot($session->get('selectedSlot'), $user);
     }
 
-    public static function getPlayerRole($playerId)
+    public static function getPlayerRole($playerId, $em)
     {
         if (self::mustSelectCharacter($playerId)) {
             return '';
         }
 
-        $em = NeikeqClubsBundle::getEm();
+        $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId);
 
-        $qb = $em->createQueryBuilder();
-
-        $qb->select('m.role')
-           ->from('NeikeqClubsBundle:ClubMembers','m')
-           ->where('m.id = ?1')
-           ->setParameter(1, $playerId)
-           ->setMaxResults(1);
-
-        $result = $qb->getQuery()->getOneOrNullResult();
-
-        if ($result != null) {
-            return $result['role'];
+        if ($clubMember != null) {
+            return $clubMember->getRole();
         }
 
         return 'CHARACTER';
     }
 
-    public static function getCharacterInfoById($playerId)
+    public static function getCharacterInfo($playerId, $em)
     {
         if (self::mustSelectCharacter($playerId)) {
             return array();
         }
-
-        $em = NeikeqClubsBundle::getEm();
 
         $player = $em->getRepository('NeikeqClubsBundle:Characters')->find($playerId);
 
@@ -53,6 +39,13 @@ class PlayerUtils
             'level' => $player->getLevel(),
             'position' => $player->getPosition()
         );
+    }
+
+    public static function getCharacterName($playerId, $em)
+    {
+        $player = $em->getRepository('NeikeqClubsBundle:Characters')->find($playerId);
+
+        return $player->getName();
     }
 
     public static function mustSelectCharacter($playerId)
@@ -78,7 +71,7 @@ class PlayerUtils
         }
     }
 
-    public static function characterList($user)
+    public static function characterList($user, $em)
     {
         $characters = array();
 
@@ -87,7 +80,7 @@ class PlayerUtils
 
             if ($playerId != null) {
                 array_push($characters, array('slot' => $i,
-                    'name' => self::getCharacterInfoById($playerId)['name']));
+                    'name' => self::getCharacterName($playerId, $em)));
             }
         }
 

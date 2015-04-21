@@ -21,14 +21,16 @@ class CreationController extends Controller
             return $this->redirect($this->generateUrl('kicks_clubs_character'));
         }
 
-        $playerRole = PlayerUtils::getPlayerRole($playerId);
+        $em = $this->getDoctrine()->getManager();
+
+        $playerRole = PlayerUtils::getPlayerRole($playerId, $em);
 
         // if the user is already a club member, redirect to his club page
         if (PlayerRoles::isGranted('MEMBER', $playerRole)) {
             return $this->redirect($this->generateUrl('kicks_clubs_club'));
         }
 
-        $playerInfo = PlayerUtils::getCharacterInfoById($playerId);
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
         $playerInfo['role'] = $playerRole;
 
         return $this->render('NeikeqClubsBundle:Default:create.html.twig',
@@ -45,22 +47,22 @@ class CreationController extends Controller
             return $this->redirect($this->generateUrl('kicks_clubs_character'));
         }
 
-        $playerRole = PlayerUtils::getPlayerRole($playerId);
+        $em = $this->getDoctrine()->getManager();
+
+        $playerRole = PlayerUtils::getPlayerRole($playerId, $em);
 
         // if the user is already a club member, redirect to his club page
         if (PlayerRoles::isGranted('MEMBER', $playerRole)) {
             return $this->redirect($this->generateUrl('kicks_clubs_club'));
         }
 
-        $playerInfo = PlayerUtils::getCharacterInfoById($playerId);
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
         $playerInfo['role'] = $playerRole;
 
         // if the player does not meet the level requirements to create a club
         if ($playerInfo['level'] < 25) {
             throw $this->createException('You do not meet the level requirements.');
         }
-
-        $em = $this->get('doctrine.orm.entity_manager');
 
         // retrieve the club data from the request
         $clubName = $request->request->get('club_name');
