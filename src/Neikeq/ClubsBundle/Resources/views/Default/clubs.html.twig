@@ -1,66 +1,73 @@
 {% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
 
 {% block title %}Clubs{{ parent() }}{% endblock %}
-{% block stylesheets %}{{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubs.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
 {% block javascripts %}
-{{ parent() }}
-<script>
-    $(document).ready(function(){
-        $('#clubModal').modal({
-            keyboard: true,
-            show: false,
-        }).on('show.bs.modal', function(){
-            var clubId = $('#clubModal').data('clubId');
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){
+            $('#clubModal').modal({
+                keyboard: true,
+                show: false,
+            }).on('show.bs.modal', function(){
+                var clubId = $('#clubModal').data('clubId');
 
-            $.ajax({
-                url: "{{ path('kicks_clubs_ajax_club_info') }}" ,
-                type: "POST",
-                data: { 'club_id' : clubId },
-                beforeSend : function() {
-                    document.getElementById('clubView').style.display = 'none';
+                $.ajax({
+                    url: "{{ path('kicks_clubs_ajax_club_info') }}" ,
+                    type: "POST",
+                    data: { 'club_id' : clubId },
+                    beforeSend : function() {
+                        document.getElementById('clubView').style.display = 'none';
 
-                    $('#clubModal').find('#clubName').html('Loading...');
-                },
-                success : function(result) {
-                    var clubInfo = result;
+                        $('#clubModal').find('#clubName').html('Loading...');
+                    },
+                    success : function(result) {
+                        var clubInfo = result;
 
-                    document.getElementById('clubView').style.display = 'block';
+                        document.getElementById('clubView').style.display = 'block';
 
-                    $('#clubModal').find('#inputClubId').val(clubId);
-                    $('#clubModal').find('#clubName').html(clubInfo['name']);
-                    $('#clubModal').find('#clubManager').html(clubInfo['manager']);
-                    $('#clubModal').find('#clubCreation').html(clubInfo['creation']);
-                    $('#clubModal').find('#clubMembers').html(clubInfo['members'].length);
-                    $('#clubModal').find('#clubMembership').html(clubInfo['membership']);
-                    $('#clubModal').find('#clubDescription').html(clubInfo['description']);
+                        $('#clubModal').find('#inputClubId').val(clubId);
+                        $('#clubModal').find('#clubName').html(clubInfo['name']);
+                        $('#clubModal').find('#clubManager').html(clubInfo['manager']);
+                        $('#clubModal').find('#clubCreation').html(clubInfo['creation']);
+                        $('#clubModal').find('#clubMembers').html(clubInfo['members'].length);
+                        $('#clubModal').find('#clubMembership').html(clubInfo['membership']);
+                        $('#clubModal').find('#clubDescription').html(clubInfo['description']);
 
-                    var memberRows = '';
+                        var memberRows = '';
 
-                    for (i = 0; i < clubInfo['members'].length; i++) {
-                        var member = clubInfo['members'][i];
+                        for (i = 0; i < clubInfo['members'].length; i++) {
+                            var member = clubInfo['members'][i];
 
-                        memberRows += '\
-                            <tr>\
-                                <td class="col-md-5">' + member['name'] + '</td>\
-                                <td class="col-md-2">' + member['level'] + '</td>\
-                                <td class="col-md-2">' + member['position'] + '</td>\
-                                <td class="col-md-2">' + member['role'] + '</td>\
-                            </tr>';
+                            memberRows += '\
+                                <tr>\
+                                    <td class="col-md-5">' + member['name'] + '</td>\
+                                    <td class="col-md-2">' + member['level'] + '</td>\
+                                    <td class="col-md-2">' + member['position'] + '</td>\
+                                    <td class="col-md-2">' + member['role'] + '</td>\
+                                </tr>';
+                        }
+
+                        $('#clubModal').find('#clubMemberRows').html($(memberRows));
+                    },
+                    error : function(textStatus, errorThrows) {
+                        $('#clubModal').find('#clubName').html('Could not load club info!');
                     }
+                });
+            });
 
-                    $('#clubModal').find('#clubMemberRows').html($(memberRows));
-                },
-                error : function(textStatus, errorThrows) {
-                    $('#clubModal').find('#clubName').html('Could not load club info!');
-                }
+            $(".table-clubs").find('tr[data-target]').on('click', function(){
+                $('#clubModal').data('clubId', $(this).data('id'));
             });
         });
-
-        $(".table-clubs").find('tr[data-target]').on('click', function(){
-            $('#clubModal').data('clubId', $(this).data('id'));
-        });
-    });
-</script>
+    </script>
 {% endblock %}
 
 {% block navbar %}
@@ -68,8 +75,7 @@
 {% endblock %}
 
 {% block container %}
-    <div class="panel panel-default">
-        <div class="panel-heading">Clubs List</div>
+    <div class="panel panel-default panel-clubs">
         <div class="panel-body">
             {% if app.request.attributes.get('_route_params').page is defined %}
                 {% set currentPage = app.request.attributes.get('_route_params').page %}
@@ -162,25 +168,24 @@
                             <button type="submit" class="btn btn-danger btn-sm pull-right">Join</button>
                         </form>
                     {% endif %}
-                    <h4 id="clubName" class="modal-title"></h4>
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#info" aria-controls="info" role="tab" data-toggle="tab">
+                                Information
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#members" aria-controls="members" role="tab" data-toggle="tab">
+                                Members
+                            </a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="modal-body">
                     <div id="clubViewHide" style="display: none"></div>
                     <div id="clubView" role="tabpanel">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active">
-                                <a href="#info" aria-controls="info" role="tab" data-toggle="tab">
-                                    Information
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#members" aria-controls="members" role="tab" data-toggle="tab">
-                                    Members
-                                </a>
-                            </li>
-                        </ul>
-
                         <!-- Tab panes -->
                         <div style="overflow: hidden" class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="info">
@@ -190,7 +195,7 @@
                                              alt="Club Logo">
                                     </div>
                                     <div class="col-md-6 col-lg-6">
-                                        <legend>Information</legend>
+                                        <legend id="clubName"></legend>
                                         <table class="table table-club-info">
                                             <tbody>
                                             <tr>

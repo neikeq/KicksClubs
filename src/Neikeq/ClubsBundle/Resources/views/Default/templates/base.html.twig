@@ -5,7 +5,10 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
-    {% stylesheets 'bundles/neikeqclubs/css/*' filter='cssrewrite' %}
+    {% stylesheets filter='cssrewrite'
+        'bundles/neikeqclubs/css/main.css'
+        'bundles/neikeqclubs/css/chosen.css'
+    %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}

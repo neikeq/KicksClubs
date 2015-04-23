@@ -1,12 +1,19 @@
 {% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
 
 {% block title %}Create{{ parent() }}{% endblock %}
-{% block stylesheets %}{{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/create.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
 {% block javascripts %}
-{{ parent() }}
-{% javascripts '@NeikeqClubsBundle/Resources/public/js/popover.js' %}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
+    {{ parent() }}
+    {% javascripts '@NeikeqClubsBundle/Resources/public/js/popover.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
 
 {% block navbar %}

@@ -1,7 +1,14 @@
 {% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
 
 {% block title %}My Club{{ parent() }}{% endblock %}
-{% block stylesheets %}{{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubs.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
 {% block javascripts %}{{ parent() }}{% endblock %}
 
 {% block navbar %}
@@ -10,9 +17,6 @@
 
 {% block container %}
     <div class="panel panel-default">
-        <div class="panel-heading club-name">
-            <center><b>{{ club.name }}</b></center>
-        </div>
         <div class="panel-body">
             <div role="tabpanel">
                 <!-- Nav tabs -->
@@ -38,7 +42,7 @@
                                      alt="Club Logo">
                             </div>
                             <div class="col-md-6 col-lg-6">
-                                <legend>Information</legend>
+                                <legend>{{ club.name }}</legend>
                                 <table class="table table-club-info">
                                     <tbody>
                                     <tr>

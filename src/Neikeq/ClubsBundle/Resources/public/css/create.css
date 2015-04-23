@@ -1,0 +1,19 @@
+/* text area */
+
+.resizable-vertical {
+  resize: vertical;
+  // Safari fix
+  overflow: auto;
+}
+
+/* club creation form */
+
+.form-club {
+    max-width: 750px;
+}
+
+/* membership mode popover */
+
+.popover {
+    max-width: 600px;
+}

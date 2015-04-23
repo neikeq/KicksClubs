@@ -4,57 +4,13 @@ body {
     background-color: #eee;
 }
 
-/* text area */
-
-.resizable-vertical {
-  resize: vertical;
-  // Safari fix
-  overflow: auto;
-}
-
-/* club creation form */
-
-.form-club {
-    max-width: 750px;
-}
-
-/* club view */
-
-.club-name {
-    font-size: 1.5em;
-}
-
-.table-club-info > tbody > tr {
-    border-top: 1px solid rgb(221, 221, 221);
-}
-
-.table-club-info > tbody > tr:first-child {
-    border-top: 0;
-}
-
-
-.table-club-info > tbody > tr > td {
-    border-top: 0;
-}
-
-/* clubs table */
-
-tr.clickable-row {
-    cursor: pointer;
-}
-
-/* membership mode popover */
-
-.popover {
-    max-width: 600px;
-}
-
 /* specific login form style */
 
 .login-panel {
     float: none;
     margin-left: auto;
     margin-right: auto;
+    max-width: 35em;
 }
 
 .form-signin {
