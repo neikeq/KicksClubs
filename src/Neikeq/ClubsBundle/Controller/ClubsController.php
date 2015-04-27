@@ -90,8 +90,7 @@ class ClubsController extends Controller
 
         $clubInfo = ClubUtils::clubView($clubMember->getClubId(), $em);
 
-        // if user is not authenticated, set username to empty
-        $playerInfo = $playerId == null ? array() : PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
         $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
 
         // params for the twig template
@@ -111,8 +110,34 @@ class ClubsController extends Controller
         return new Response('This is not a valid ajax request.', 400);
     }
 
-    public function joinAction()
+    public function joinAction(Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER', null);
 
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
+
+        if (PlayerUtils::mustSelectCharacter($playerId)) {
+            return $this->redirect($this->generateUrl('kicks_clubs_character'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
+
+        if (is_null($em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId))) {
+            $clubId = $request->request->get('club_id');
+            $clubName = ClubUtils::clubName($clubId, $em);
+
+            return $this->render('NeikeqClubsBundle:Default:join.html.twig',
+                array('player' => $playerInfo, 'club_id' => $clubId, 'club_name' => $clubName));
+        } else {
+            return new Response('You are already a club member.', 400);
+        }
+    }
+
+    public function joinCheckAction(Request $request)
+    {
+        return new Response('Not yet implemented!');
     }
 }

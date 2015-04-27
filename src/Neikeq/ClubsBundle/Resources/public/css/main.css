@@ -6,11 +6,10 @@ body {
 
 /* specific login form style */
 
-.login-panel {
+.center {
     float: none;
     margin-left: auto;
     margin-right: auto;
-    max-width: 35em;
 }
 
 .form-signin {

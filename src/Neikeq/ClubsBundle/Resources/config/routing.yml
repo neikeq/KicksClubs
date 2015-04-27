@@ -49,3 +49,7 @@ kicks_clubs_ajax_club_info:
 kicks_clubs_join:
     path:     /join/
     defaults: { _controller: NeikeqClubsBundle:Clubs:join }
+
+kicks_clubs_join_check:
+    path:     /join_check/
+    defaults: { _controller: NeikeqClubsBundle:Clubs:joinCheck }

@@ -1,0 +1,22 @@
+{% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
+
+{% block title %}Join{{ parent() }}{% endblock %}
+{% block stylesheets %}{{ parent() }}{% endblock %}
+{% block javascripts %}{{ parent() }}{% endblock %}
+
+{% block navbar %}
+    {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
+{% endblock %}
+
+{% block container %}
+    <div class="panel panel-default center col-lg-6">
+        <div class="panel-body">
+            <legend>Confirm to join club: {{ club_name }}</legend>
+            <form action="{{ path('kicks_clubs_join_check') }}" method="post">
+                <input id ="inputClubId" type="hidden" name="club_id" value="{{ club_id }}">
+                <button type="submit" class="btn btn-primary btn-sm pull-right">Confirm</button>
+                <a class="btn btn-sm pull-right" href="{{ path('kicks_clubs_clubs') }}">Cancel</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}
