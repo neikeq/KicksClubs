@@ -11,7 +11,6 @@
     <field name="blocked" type="integer" column="blocked" nullable="false"/>
     <field name="moderator" type="integer" column="moderator" nullable="false"/>
     <field name="visible" type="integer" column="visible" nullable="false"/>
-    <field name="clubId" type="integer" column="club_id" nullable="false"/>
     <field name="questCurrent" type="smallint" column="quest_current" nullable="false"/>
     <field name="questMatchesLeft" type="smallint" column="quest_matches_left" nullable="false"/>
     <field name="tutorialDribbling" type="boolean" column="tutorial_dribbling" nullable="false"/>

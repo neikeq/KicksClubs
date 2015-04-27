@@ -18,3 +18,9 @@ services:
         public: false
         tags:
             - { name: twig.extension }
+
+    neikeq.clubs.position:
+        class: Neikeq\ClubsBundle\Twig\Position
+        public: false
+        tags:
+            - { name: twig.extension }

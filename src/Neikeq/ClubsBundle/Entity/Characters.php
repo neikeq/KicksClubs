@@ -47,11 +47,6 @@ class Characters
     /**
      * @var integer
      */
-    private $clubId;
-
-    /**
-     * @var integer
-     */
     private $questCurrent;
 
     /**
@@ -411,7 +406,7 @@ class Characters
     /**
      * Get owner
      *
-     * @return integer 
+     * @return integer
      */
     public function getOwner()
     {
@@ -434,7 +429,7 @@ class Characters
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -457,7 +452,7 @@ class Characters
     /**
      * Get position
      *
-     * @return integer 
+     * @return integer
      */
     public function getPosition()
     {
@@ -480,7 +475,7 @@ class Characters
     /**
      * Get level
      *
-     * @return integer 
+     * @return integer
      */
     public function getLevel()
     {
@@ -503,7 +498,7 @@ class Characters
     /**
      * Get blocked
      *
-     * @return integer 
+     * @return integer
      */
     public function getBlocked()
     {
@@ -526,7 +521,7 @@ class Characters
     /**
      * Get moderator
      *
-     * @return integer 
+     * @return integer
      */
     public function getModerator()
     {
@@ -549,34 +544,11 @@ class Characters
     /**
      * Get visible
      *
-     * @return integer 
+     * @return integer
      */
     public function getVisible()
     {
         return $this->visible;
-    }
-
-    /**
-     * Set clubId
-     *
-     * @param integer $clubId
-     * @return Characters
-     */
-    public function setClubId($clubId)
-    {
-        $this->clubId = $clubId;
-
-        return $this;
-    }
-
-    /**
-     * Get clubId
-     *
-     * @return integer 
-     */
-    public function getClubId()
-    {
-        return $this->clubId;
     }
 
     /**
@@ -595,7 +567,7 @@ class Characters
     /**
      * Get questCurrent
      *
-     * @return integer 
+     * @return integer
      */
     public function getQuestCurrent()
     {
@@ -618,7 +590,7 @@ class Characters
     /**
      * Get questMatchesLeft
      *
-     * @return integer 
+     * @return integer
      */
     public function getQuestMatchesLeft()
     {
@@ -641,7 +613,7 @@ class Characters
     /**
      * Get tutorialDribbling
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getTutorialDribbling()
     {
@@ -664,7 +636,7 @@ class Characters
     /**
      * Get tutorialPassing
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getTutorialPassing()
     {
@@ -687,7 +659,7 @@ class Characters
     /**
      * Get tutorialShooting
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getTutorialShooting()
     {
@@ -710,7 +682,7 @@ class Characters
     /**
      * Get tutorialDefense
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getTutorialDefense()
     {
@@ -733,7 +705,7 @@ class Characters
     /**
      * Get receivedReward
      *
-     * @return integer 
+     * @return integer
      */
     public function getReceivedReward()
     {
@@ -756,7 +728,7 @@ class Characters
     /**
      * Get experience
      *
-     * @return integer 
+     * @return integer
      */
     public function getExperience()
     {
@@ -779,7 +751,7 @@ class Characters
     /**
      * Get points
      *
-     * @return integer 
+     * @return integer
      */
     public function getPoints()
     {
@@ -802,7 +774,7 @@ class Characters
     /**
      * Get ticketsKash
      *
-     * @return integer 
+     * @return integer
      */
     public function getTicketsKash()
     {
@@ -825,7 +797,7 @@ class Characters
     /**
      * Get ticketsPoints
      *
-     * @return integer 
+     * @return integer
      */
     public function getTicketsPoints()
     {
@@ -848,7 +820,7 @@ class Characters
     /**
      * Get animation
      *
-     * @return integer 
+     * @return integer
      */
     public function getAnimation()
     {
@@ -871,7 +843,7 @@ class Characters
     /**
      * Get face
      *
-     * @return integer 
+     * @return integer
      */
     public function getFace()
     {
@@ -894,7 +866,7 @@ class Characters
     /**
      * Get defaultHead
      *
-     * @return integer 
+     * @return integer
      */
     public function getDefaultHead()
     {
@@ -917,7 +889,7 @@ class Characters
     /**
      * Get defaultShirts
      *
-     * @return integer 
+     * @return integer
      */
     public function getDefaultShirts()
     {
@@ -940,7 +912,7 @@ class Characters
     /**
      * Get defaultPants
      *
-     * @return integer 
+     * @return integer
      */
     public function getDefaultPants()
     {
@@ -963,7 +935,7 @@ class Characters
     /**
      * Get defaultShoes
      *
-     * @return integer 
+     * @return integer
      */
     public function getDefaultShoes()
     {
@@ -986,7 +958,7 @@ class Characters
     /**
      * Get statsPoints
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsPoints()
     {
@@ -1009,7 +981,7 @@ class Characters
     /**
      * Get statsRunning
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsRunning()
     {
@@ -1032,7 +1004,7 @@ class Characters
     /**
      * Get statsEndurance
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsEndurance()
     {
@@ -1055,7 +1027,7 @@ class Characters
     /**
      * Get statsAgility
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsAgility()
     {
@@ -1078,7 +1050,7 @@ class Characters
     /**
      * Get statsBallControl
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsBallControl()
     {
@@ -1101,7 +1073,7 @@ class Characters
     /**
      * Get statsDribbling
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsDribbling()
     {
@@ -1124,7 +1096,7 @@ class Characters
     /**
      * Get statsStealing
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsStealing()
     {
@@ -1147,7 +1119,7 @@ class Characters
     /**
      * Get statsTackling
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsTackling()
     {
@@ -1170,7 +1142,7 @@ class Characters
     /**
      * Get statsHeading
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsHeading()
     {
@@ -1193,7 +1165,7 @@ class Characters
     /**
      * Get statsShortShots
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsShortShots()
     {
@@ -1216,7 +1188,7 @@ class Characters
     /**
      * Get statsLongShots
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsLongShots()
     {
@@ -1239,7 +1211,7 @@ class Characters
     /**
      * Get statsCrossing
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsCrossing()
     {
@@ -1262,7 +1234,7 @@ class Characters
     /**
      * Get statsShortPasses
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsShortPasses()
     {
@@ -1285,7 +1257,7 @@ class Characters
     /**
      * Get statsLongPasses
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsLongPasses()
     {
@@ -1308,7 +1280,7 @@ class Characters
     /**
      * Get statsMarking
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsMarking()
     {
@@ -1331,7 +1303,7 @@ class Characters
     /**
      * Get statsGoalkeeping
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsGoalkeeping()
     {
@@ -1354,7 +1326,7 @@ class Characters
     /**
      * Get statsPunching
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsPunching()
     {
@@ -1377,7 +1349,7 @@ class Characters
     /**
      * Get statsDefense
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatsDefense()
     {
@@ -1400,7 +1372,7 @@ class Characters
     /**
      * Get statusMessage
      *
-     * @return string 
+     * @return string
      */
     public function getStatusMessage()
     {
@@ -1423,7 +1395,7 @@ class Characters
     /**
      * Get friendsList
      *
-     * @return string 
+     * @return string
      */
     public function getFriendsList()
     {
@@ -1446,7 +1418,7 @@ class Characters
     /**
      * Get ignoredList
      *
-     * @return string 
+     * @return string
      */
     public function getIgnoredList()
     {
@@ -1469,7 +1441,7 @@ class Characters
     /**
      * Get historyMatches
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMatches()
     {
@@ -1492,7 +1464,7 @@ class Characters
     /**
      * Get historyWins
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryWins()
     {
@@ -1515,7 +1487,7 @@ class Characters
     /**
      * Get historyDraws
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryDraws()
     {
@@ -1538,7 +1510,7 @@ class Characters
     /**
      * Get historyPoints
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryPoints()
     {
@@ -1561,7 +1533,7 @@ class Characters
     /**
      * Get historyMom
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMom()
     {
@@ -1584,7 +1556,7 @@ class Characters
     /**
      * Get historyValidGoals
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryValidGoals()
     {
@@ -1607,7 +1579,7 @@ class Characters
     /**
      * Get historyValidAssists
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryValidAssists()
     {
@@ -1630,7 +1602,7 @@ class Characters
     /**
      * Get historyValidInterception
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryValidInterception()
     {
@@ -1653,7 +1625,7 @@ class Characters
     /**
      * Get historyValidShooting
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryValidShooting()
     {
@@ -1676,7 +1648,7 @@ class Characters
     /**
      * Get historyValidStealing
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryValidStealing()
     {
@@ -1699,7 +1671,7 @@ class Characters
     /**
      * Get historyValidTackling
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryValidTackling()
     {
@@ -1722,7 +1694,7 @@ class Characters
     /**
      * Get historyShooting
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryShooting()
     {
@@ -1745,7 +1717,7 @@ class Characters
     /**
      * Get historyStealing
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryStealing()
     {
@@ -1768,7 +1740,7 @@ class Characters
     /**
      * Get historyTackling
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryTackling()
     {
@@ -1791,7 +1763,7 @@ class Characters
     /**
      * Get historyTotalPoints
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryTotalPoints()
     {
@@ -1814,7 +1786,7 @@ class Characters
     /**
      * Get historyMonthMatches
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthMatches()
     {
@@ -1837,7 +1809,7 @@ class Characters
     /**
      * Get historyMonthWins
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthWins()
     {
@@ -1860,7 +1832,7 @@ class Characters
     /**
      * Get historyMonthDraws
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthDraws()
     {
@@ -1883,7 +1855,7 @@ class Characters
     /**
      * Get historyMonthPoints
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthPoints()
     {
@@ -1906,7 +1878,7 @@ class Characters
     /**
      * Get historyMonthMom
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthMom()
     {
@@ -1929,7 +1901,7 @@ class Characters
     /**
      * Get historyMonthValidGoals
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthValidGoals()
     {
@@ -1952,7 +1924,7 @@ class Characters
     /**
      * Get historyMonthValidAssists
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthValidAssists()
     {
@@ -1975,7 +1947,7 @@ class Characters
     /**
      * Get historyMonthValidInterception
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthValidInterception()
     {
@@ -1998,7 +1970,7 @@ class Characters
     /**
      * Get historyMonthValidShooting
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthValidShooting()
     {
@@ -2021,7 +1993,7 @@ class Characters
     /**
      * Get historyMonthValidStealing
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthValidStealing()
     {
@@ -2044,7 +2016,7 @@ class Characters
     /**
      * Get historyMonthValidTackling
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthValidTackling()
     {
@@ -2067,7 +2039,7 @@ class Characters
     /**
      * Get historyMonthShooting
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthShooting()
     {
@@ -2090,7 +2062,7 @@ class Characters
     /**
      * Get historyMonthStealing
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthStealing()
     {
@@ -2113,7 +2085,7 @@ class Characters
     /**
      * Get historyMonthTackling
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthTackling()
     {
@@ -2136,7 +2108,7 @@ class Characters
     /**
      * Get historyMonthTotalPoints
      *
-     * @return integer 
+     * @return integer
      */
     public function getHistoryMonthTotalPoints()
     {
@@ -2146,7 +2118,7 @@ class Characters
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {

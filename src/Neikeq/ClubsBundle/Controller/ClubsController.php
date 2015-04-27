@@ -39,6 +39,11 @@ class ClubsController extends Controller
         $params = array('player' => $playerInfo, 'clubs' => $clubs,
             'pages' => ceil($clubsCount / ClubUtils::clubsPerPage));
 
+        // minimum value for pages is 1
+        if ($params['pages'] < 1) {
+            $params['pages'] = 1;
+        }
+
         return $this->render('NeikeqClubsBundle:Default:clubs.html.twig', $params);
     }
 
