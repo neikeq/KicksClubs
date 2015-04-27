@@ -19,7 +19,7 @@ class ClubUtils
         return $club->getName();
     }
 
-    public static function clubView($clubId, $em)
+    public static function clubInfo($clubId, $em)
     {
         $club = $em->getRepository('NeikeqClubsBundle:Clubs')->find($clubId);
 

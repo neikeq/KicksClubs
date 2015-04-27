@@ -88,7 +88,7 @@ class ClubsController extends Controller
 
         $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId);
 
-        $clubInfo = ClubUtils::clubView($clubMember->getClubId(), $em);
+        $clubInfo = ClubUtils::clubInfo($clubMember->getClubId(), $em);
 
         $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
         $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
@@ -104,7 +104,7 @@ class ClubsController extends Controller
         if ($request->isXMLHttpRequest()) {
             $em = $this->getDoctrine()->getManager();
 
-            return new JsonResponse(ClubUtils::clubView($request->request->get('club_id'), $em));
+            return new JsonResponse(ClubUtils::clubInfo($request->request->get('club_id'), $em));
         }
 
         return new Response('This is not a valid ajax request.', 400);
@@ -138,6 +138,45 @@ class ClubsController extends Controller
 
     public function joinCheckAction(Request $request)
     {
-        return new Response('Not yet implemented!');
+        $this->denyAccessUnlessGranted('ROLE_USER', null);
+
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
+
+        if (PlayerUtils::mustSelectCharacter($playerId)) {
+            return $this->redirect($this->generateUrl('kicks_clubs_character'));
+        }
+
+        $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId);
+
+        if (!is_null($club_member)) {
+            return new Response('You are already a club member.');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $clubId = $request->request->get('club_id');
+        $club = $em->getRepository('NeikeqClubsBundle:Clubs')->find($clubId);
+
+        switch ($club->getMembershipMode()) {
+            case "DISCONTINUED":
+                // TODO must go in joinAction too
+                return new Response('This club does not accept new requests.');
+            case "IMMEDIATE":
+                // TODO there will be the possibility to purchase member slots in the future
+                if (ClubInfo::membersCount($clubId, $em) < 30) {
+                    ClubUtils::addClubMember($playerId, $clubId, 'MEMBER', $em);
+                    return new Response('Success! You are now a club member.');
+                } else {
+                    return new Response('This club is full and cannot accept more members.');
+                }
+                break;
+            case "APPROVED":
+                // TODO there will be the possibility to purchase member slots in the future
+                if (ClubInfo::membersCount($clubId, $em) < 30) {
+                    return new Response('APPROVED mode requests are not yet implemented!');
+                } else {
+                    return new Response('This club is full and cannot accept more members.');
+                }
+            default:
+        }
     }
 }
