@@ -20,8 +20,14 @@
             $('#clubModal').modal({
                 keyboard: true,
                 show: false,
-            }).on('show.bs.modal', function(){
+            }).on('show.bs.modal', function() {
                 var clubId = $('#clubModal').data('clubId');
+
+                // Make sure that Information is the active tab
+                $('#clubModal').find('#tabMembers').removeClass('active');
+                $('#clubModal').find('#navTabMembers').removeClass('active');
+                $('#clubModal').find('#tabInfo').addClass('active');
+                $('#clubModal').find('#navTabInfo').addClass('active');
 
                 $.ajax({
                     url: "{{ path('kicks_clubs_ajax_club_info') }}" ,
@@ -92,7 +98,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search for...">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Go!</button>
+                            <button class="btn btn-default" type="button">Search</button>
                         </span>
                     </div>
                 </div>
@@ -166,21 +172,26 @@
             <div class="modal-content">
                 <div class="modal-header">
                     {% if is_granted('ROLE_USER') and not player.role|grants('MEMBER') %}
-                        <form action="{{ path('kicks_clubs_join') }}" method="post" aria-hidden="true">
+                        <form action="{{ path('kicks_clubs_member_join') }}" method="post" aria-hidden="true">
                             <input id ="inputClubId" type="hidden" name="club_id">
-                            <button type="submit" class="btn btn-danger btn-sm pull-right">Join</button>
+                            <button type="submit" class="btn btn-success btn-sm pull-right">Join</button>
+                        </form>
+                    {% elseif player.role|grants('MEMBER') and not player.role|grants('MANAGER') %}
+                        <form action="{{ path('kicks_clubs_member_leave') }}" method="post" aria-hidden="true">
+                            <input id ="inputClubId" type="hidden" name="club_id">
+                            <button type="submit" class="btn btn-danger btn-sm pull-right">Leave</button>
                         </form>
                     {% endif %}
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active">
-                            <a href="#info" aria-controls="info" role="tab" data-toggle="tab">
+                        <li role="presentation" class="active" id="navTabInfo">
+                            <a href="#tabInfo" aria-controls="info" role="tab" data-toggle="tab">
                                 Information
                             </a>
                         </li>
-                        <li role="presentation">
-                            <a href="#members" aria-controls="members" role="tab" data-toggle="tab">
+                        <li role="presentation" id="navTabMembers">
+                            <a href="#tabMembers" aria-controls="members" role="tab" data-toggle="tab">
                                 Members
                             </a>
                         </li>
@@ -191,7 +202,7 @@
                     <div id="clubView" role="tabpanel">
                         <!-- Tab panes -->
                         <div style="overflow: hidden" class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="info">
+                            <div role="tabpanel" class="tab-pane active" id="tabInfo">
                                 <div style="padding: 25px" class="col-md-12 col-lg-12">
                                     <div style="margin-left: 20px; margin-right:20px;" class="col-md-3 col-lg-3">
                                         <img src="http://kicksonline.eu/assets/master/images/logo.png"
@@ -227,7 +238,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="padding-top: 25px" role="tabpanel" class="tab-pane" id="members">
+                            <div style="padding-top: 25px" role="tabpanel" class="tab-pane" id="tabMembers">
                                 <table class="table table-hover table-bordered table-clubs">
                                     <thead>
                                         <tr>

@@ -12,6 +12,7 @@ class ClubMembersRepository extends EntityRepository
         $criteria = new Criteria();
 
         $criteria->where($criteria->expr()->eq('id', $playerId));
+        $criteria->andWhere($criteria->expr()->neq('role', 'REJECTED'));
         $criteria->andWhere($criteria->expr()->neq('role', 'PENDING'));
 
         return $this->matching($criteria)->get(0);
@@ -22,6 +23,7 @@ class ClubMembersRepository extends EntityRepository
         $criteria = new Criteria();
 
         $criteria->where($criteria->expr()->eq('clubId', $clubId));
+        $criteria->andWhere($criteria->expr()->neq('role', 'REJECTED'));
         $criteria->andWhere($criteria->expr()->neq('role', 'PENDING'));
 
         return $this->matching($criteria);
@@ -29,6 +31,25 @@ class ClubMembersRepository extends EntityRepository
 
     public function findAllPendingMembersBy($clubId)
     {
+        return $this->findBy(array('clubId' => $clubId, 'role' => 'PENDING'));
+    }
 
+    public function findOnePendingMemberBy($playerId)
+    {
+        return $this->findOneBy(array('id' => $playerId, 'role' => 'PENDING'));
+    }
+
+    public function findOnePendingOrRejectedMemberBy($playerId)
+    {
+        $criteria = new Criteria();
+
+        $criteria->where($criteria->expr()->eq('id', $playerId));
+        $criteria->andWhere($criteria->expr()->in('role', array('REJECTED', 'PENDING')));
+
+        return $this->matching($criteria)->get(0);
+    }
+
+    public function findOneAnyMemberBy($playerId) {
+        return $this->findOneBy(array('id' => $playerId));
     }
 }

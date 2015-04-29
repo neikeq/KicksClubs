@@ -20,6 +20,7 @@
                 {% if player.role|grants('MEMBER') %}
                     <li><a href="/club/">My Club</a></li>
                 {% elseif is_granted('ROLE_USER') %}
+                    <li><a href="/request/">Requests</a></li>
                     <li><a href="/create/">Create</a></li>
                 {% endif %}
 

@@ -1,0 +1,51 @@
+{% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
+
+{% block title %}Request{{ parent() }}{% endblock %}
+
+{% block stylesheets %}{{ parent() }}{% endblock %}
+
+{% block javascripts %}{{ parent() }}{% endblock %}
+
+{% block navbar %}
+    {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
+{% endblock %}
+
+{% block container %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <legend>Member Requests</legend>
+
+            {% if request is defined %}
+                <table class="table table-hover table-bordered table-clubs">
+                    <thead>
+                        <tr>
+                            <th>Club name</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-md-5">{{ request.club_name }}</td>
+                            <td {% if request.status == 'REJECTED' %}style="color: red"{% endif %}
+                                class="col-md-2">{{ request.status }}</td>
+                            <td class="col-md-1">
+                                <form class="action-form" action="{{ path('kicks_clubs_member_request_cancel') }}" method="post">
+                                    <button type="submit" class="btn btn-xs btn-danger pull-left reject-btn">
+                                        {% if request.status == 'REJECTED' %}
+                                            Remove
+                                        {% else %}
+                                            Cancel
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% else %}
+                <p>You did not send any member request yet.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

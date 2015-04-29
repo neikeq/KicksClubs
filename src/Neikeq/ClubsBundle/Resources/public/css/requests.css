@@ -1,0 +1,13 @@
+.action-form {
+    display: inline;
+}
+
+.accept-btn {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.reject-btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}

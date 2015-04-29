@@ -101,12 +101,7 @@ class ClubUtils
 
     public static function membersCount($clubId, $em)
     {
-        $pageClubsQB = $em->createQueryBuilder();
-        $pageClubsQB->select('COUNT(m.id)')
-           ->from('NeikeqClubsBundle:ClubMembers', 'm')
-           ->where('m.clubId = ?1 AND m.role != \'PENDING\'')
-           ->setParameter(1, $clubId);
-        return $pageClubsQB->getQuery()->getSingleScalarResult();
+        return $em->getRepository('NeikeqClubsBundle:ClubMembers')->findAllMembersBy($clubId)->count();
     }
 
     public static function createClub($clubName, $membershipMode, $description, $em)
@@ -123,8 +118,14 @@ class ClubUtils
     }
 
     public static function addClubMember($playerId, $clubId, $role, $em) {
-        $clubMember = new ClubMembers();
-        $clubMember->setId($playerId);
+        $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+            ->findOneAnyMemberBy($playerId);
+
+        if (is_null($clubMember)) {
+            $clubMember = new ClubMembers();
+            $clubMember->setId($playerId);
+        }
+
         $clubMember->setClubId($clubId);
         $clubMember->setRole($role);
 
