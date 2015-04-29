@@ -127,12 +127,20 @@ class ClubsController extends Controller
 
         if (is_null($em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId))) {
             $clubId = $request->request->get('club_id');
-            $clubName = ClubUtils::clubName($clubId, $em);
+            $club = $em->getRepository('NeikeqClubsBundle:Clubs')->find($clubId);
 
-            return $this->render('NeikeqClubsBundle:Default:join.html.twig',
-                array('player' => $playerInfo, 'club_id' => $clubId, 'club_name' => $clubName));
+            if ($club->getMembershipMode() !== 'DISCONTINUED') {
+                $clubName = $club->getName();
+
+                return $this->render('NeikeqClubsBundle:Default:join.html.twig',
+                    array('player' => $playerInfo, 'club_id' => $clubId, 'club_name' => $clubName));
+            } else {
+                return $this->render('NeikeqClubsBundle:Default:join-result.html.twig',
+                    array('player' => $playerInfo, 'error' => 'This club does not accept new requests.'));
+            }
         } else {
-            return new Response('You are already a club member.', 400);
+            return $this->render('NeikeqClubsBundle:Default:join-result.html.twig',
+                array('player' => $playerInfo, 'error' => 'You are already a club member.'));
         }
     }
 
@@ -146,37 +154,52 @@ class ClubsController extends Controller
             return $this->redirect($this->generateUrl('kicks_clubs_character'));
         }
 
+        $em = $this->getDoctrine()->getManager();
         $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId);
 
-        if (!is_null($club_member)) {
-            return new Response('You are already a club member.');
-        }
-
-        $em = $this->getDoctrine()->getManager();
         $clubId = $request->request->get('club_id');
         $club = $em->getRepository('NeikeqClubsBundle:Clubs')->find($clubId);
 
-        switch ($club->getMembershipMode()) {
-            case "DISCONTINUED":
-                // TODO must go in joinAction too
-                return new Response('This club does not accept new requests.');
-            case "IMMEDIATE":
-                // TODO there will be the possibility to purchase member slots in the future
-                if (ClubInfo::membersCount($clubId, $em) < 30) {
-                    ClubUtils::addClubMember($playerId, $clubId, 'MEMBER', $em);
-                    return new Response('Success! You are now a club member.');
-                } else {
-                    return new Response('This club is full and cannot accept more members.');
-                }
-                break;
-            case "APPROVED":
-                // TODO there will be the possibility to purchase member slots in the future
-                if (ClubInfo::membersCount($clubId, $em) < 30) {
-                    return new Response('APPROVED mode requests are not yet implemented!');
-                } else {
-                    return new Response('This club is full and cannot accept more members.');
-                }
-            default:
+        $error = null;
+
+        if (is_null($clubMember)) {
+            switch ($club->getMembershipMode()) {
+                case "DISCONTINUED":
+                    $error = 'This club does not accept new requests.';
+                    break;
+                case "IMMEDIATE":
+                    if (ClubUtils::membersCount($clubId, $em) < 30) {
+                        ClubUtils::addClubMember($playerId, $clubId, 'MEMBER', $em);
+                    } else {
+                        $error = 'This club is full and cannot accept more members.';
+                    }
+                    break;
+                case "APPROVED":
+                    if (ClubUtils::membersCount($clubId, $em) < 30) {
+                        $error = 'APPROVED mode requests are not yet implemented!';
+                    } else {
+                        $error = 'This club is full and cannot accept more members.';
+                    }
+                    break;
+                default:
+            }
+        } else {
+            $error = 'You are already a club member.';
         }
+
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
+
+        $params = array('player' => $playerInfo);
+
+        if (!is_null($error)) {
+            $params['error'] = $error;
+        } else {
+            $params['success_message'] = $club->getMembershipMode() == "APPROVED" ?
+                'Your request has been received and is waiting for manager approvation.' :
+                'Your request has been received and was automatically approved.';
+        }
+
+        return $this->render('NeikeqClubsBundle:Default:join-result.html.twig', $params);
     }
 }

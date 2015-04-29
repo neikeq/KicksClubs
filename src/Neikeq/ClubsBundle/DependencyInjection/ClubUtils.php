@@ -12,13 +12,6 @@ class ClubUtils
 {
     const clubsPerPage = 5;
 
-    public static function clubName($clubId, $em)
-    {
-        $club = $em->getRepository('NeikeqClubsBundle:Clubs')->find($clubId);
-
-        return $club->getName();
-    }
-
     public static function clubInfo($clubId, $em)
     {
         $club = $em->getRepository('NeikeqClubsBundle:Clubs')->find($clubId);

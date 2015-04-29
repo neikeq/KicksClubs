@@ -1,0 +1,40 @@
+{% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
+
+{% block title %}My Club{{ parent() }}{% endblock %}
+{% block stylesheets %}{{ parent() }}{% endblock %}
+{% block javascripts %}{{ parent() }}{% endblock %}
+
+{% block navbar %}
+    {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
+{% endblock %}
+
+{% block container %}
+    {% set success = not error is defined %}
+
+    {% if success %}
+        {% set response_class = 'success' %}
+    {% else %}
+        {% set response_class = 'danger' %}
+    {% endif %}
+
+    <div style="display:table; width:100%;" role="alert" class="alert alert-{{ response_class }}">
+        <p style="display:table-cell; vertical-align:middle">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">
+                {% if success %}
+                    Success:
+                {% else %}
+                    Error:
+                {% endif %}
+            </span>
+            {% if success %}
+                <b>Success!</b> {{ success_message }}
+            {% else %}
+                <b>Error!</b> {{ error }}
+            {% endif %}
+        </p>
+        <form action="{{ path('kicks_clubs_clubs') }}">
+            <button type="submit" class="btn btn-{{ response_class }} pull-right">Go back</button>
+        </form>
+    </div>
+{% endblock %}
