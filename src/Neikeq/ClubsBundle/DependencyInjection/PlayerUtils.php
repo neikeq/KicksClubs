@@ -17,7 +17,7 @@ class PlayerUtils
             return '';
         }
 
-        $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId);
+        $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->findOneMemberBy($playerId);
 
         if ($clubMember != null) {
             return $clubMember->getRole();

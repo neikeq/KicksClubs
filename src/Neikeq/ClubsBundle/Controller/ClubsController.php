@@ -86,7 +86,7 @@ class ClubsController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId);
+        $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->findOneMemberBy($playerId);
 
         $clubInfo = ClubUtils::clubInfo($clubMember->getClubId(), $em);
 
@@ -125,7 +125,7 @@ class ClubsController extends Controller
         $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
         $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
 
-        if (is_null($em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId))) {
+        if (is_null($em->getRepository('NeikeqClubsBundle:ClubMembers')->findOneMemberBy($playerId))) {
             $clubId = $request->request->get('club_id');
             $club = $em->getRepository('NeikeqClubsBundle:Clubs')->find($clubId);
 
@@ -155,7 +155,7 @@ class ClubsController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->find($playerId);
+        $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->findOneMemberBy($playerId);
 
         $clubId = $request->request->get('club_id');
         $club = $em->getRepository('NeikeqClubsBundle:Clubs')->find($clubId);
@@ -176,7 +176,7 @@ class ClubsController extends Controller
                     break;
                 case "APPROVED":
                     if (ClubUtils::membersCount($clubId, $em) < 30) {
-                        $error = 'APPROVED mode requests are not yet implemented!';
+                        ClubUtils::addClubMember($playerId, $clubId, 'PENDING', $em);
                     } else {
                         $error = 'This club is full and cannot accept more members.';
                     }

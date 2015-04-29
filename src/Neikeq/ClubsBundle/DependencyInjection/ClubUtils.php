@@ -30,8 +30,7 @@ class ClubUtils
 
     public static function clubMembersInfo($clubId, $em)
     {
-        $clubMembers = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-            ->findBy(array('clubId' => $clubId));
+        $clubMembers = $em->getRepository('NeikeqClubsBundle:ClubMembers')->findAllMembersBy($clubId);
 
         $clubMembersInfo = array();
 
@@ -105,7 +104,7 @@ class ClubUtils
         $pageClubsQB = $em->createQueryBuilder();
         $pageClubsQB->select('COUNT(m.id)')
            ->from('NeikeqClubsBundle:ClubMembers', 'm')
-           ->where('m.clubId = ?1')
+           ->where('m.clubId = ?1 AND m.role != \'PENDING\'')
            ->setParameter(1, $clubId);
         return $pageClubsQB->getQuery()->getSingleScalarResult();
     }
