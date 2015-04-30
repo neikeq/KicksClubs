@@ -179,4 +179,124 @@ class ManagerController extends Controller
 
         return $this->render('NeikeqClubsBundle:Default:manager/requests.html.twig', $params);
     }
+
+    public function informationAction()
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER', null);
+
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
+
+        if (PlayerUtils::mustSelectCharacter($playerId)) {
+            return $this->redirect($this->generateUrl('kicks_clubs_character'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $role = PlayerUtils::getPlayerRole($playerId, $em);
+
+        if ($role != 'MANAGER') {
+            throw $this->createAccessDeniedException();
+        }
+
+        $clubId = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+            ->findOneMemberBy($playerId)->getClubId();
+
+        $club = $em->getRepository('NeikeqClubsBundle:Clubs')
+            ->findOneBy(array('id' => $clubId));
+
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = $role;
+
+        // params for the twig template
+        $params = array('player' => $playerInfo, 'club_description' => $club->getDescription());
+
+        return $this->render('NeikeqClubsBundle:Default:manager/information.html.twig', $params);
+    }
+
+    public function informationCheckAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER', null);
+
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
+
+        if (PlayerUtils::mustSelectCharacter($playerId)) {
+            return $this->redirect($this->generateUrl('kicks_clubs_character'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $role = PlayerUtils::getPlayerRole($playerId, $em);
+
+        if ($role != 'MANAGER') {
+            throw $this->createAccessDeniedException();
+        }
+
+        $clubId = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+            ->findOneMemberBy($playerId)->getClubId();
+
+        $club = $em->getRepository('NeikeqClubsBundle:Clubs')
+            ->findOneBy(array('id' => $clubId));
+
+        $error = null;
+        $success = null;
+
+        if ($role == 'MANAGER') {
+            $description = $request->request->get('description');
+
+            if (is_null($description)) {
+                $error = 'Missing description field.';
+            } else if (strlen($description) > 512 || empty($description)) {
+                // if the description length is not valid
+                $error = 'Club description was not specified or is too long.';
+            } else {
+                // Update the club description
+                $club->setDescription($description);
+                $em->persist($club);
+                $em->flush();
+
+                $success = 'The club description was updated successfully';
+            }
+        }
+
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = $role;
+
+        // params for the twig template
+        $params = array('player' => $playerInfo, 'club_description' => $club->getDescription());
+
+        if (!is_null($error)) {
+            $params['error'] = $error;
+        } else if (!is_null($success)) {
+            $params['success'] = $success;
+        }
+
+        return $this->render('NeikeqClubsBundle:Default:manager/information.html.twig', $params);
+    }
+
+    public function membersAction()
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER', null);
+
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
+
+        if (PlayerUtils::mustSelectCharacter($playerId)) {
+            return $this->redirect($this->generateUrl('kicks_clubs_character'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $role = PlayerUtils::getPlayerRole($playerId, $em);
+
+        if ($role != 'MANAGER') {
+            throw $this->createAccessDeniedException();
+        }
+
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = $role;
+
+        // params for the twig template
+        $params = array('player' => $playerInfo);
+
+        return $this->render('NeikeqClubsBundle:Default:manager/members.html.twig', $params);
+    }
 }

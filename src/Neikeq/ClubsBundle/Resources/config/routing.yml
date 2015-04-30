@@ -81,3 +81,15 @@ kicks_clubs_manager_request_accept:
 kicks_clubs_manager_request_reject:
     path:     /request_reject/
     defaults: { _controller: NeikeqClubsBundle:Manager:requestReject }
+
+kicks_clubs_manager_information:
+    path:     /information/
+    defaults: { _controller: NeikeqClubsBundle:Manager:information }
+
+kicks_clubs_manager_information_check:
+    path:     /information_check/
+    defaults: { _controller: NeikeqClubsBundle:Manager:informationCheck }
+
+kicks_clubs_manager_members:
+    path:     /members/
+    defaults: { _controller: NeikeqClubsBundle:Manager:members }

@@ -1,0 +1,69 @@
+{% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
+
+{% block title %}Edit Information{{ parent() }}{% endblock %}
+
+{% block stylesheets %}{{ parent() }}{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubform.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block navbar %}
+    {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
+{% endblock %}
+
+{% block container %}
+    {% if success is defined %}
+        {% set response_class = 'success' %}
+    {% elseif error is defined %}
+        {% set response_class = 'danger' %}
+    {% endif %}
+
+    {% if success is defined or error is defined %}
+        <div style="display:table; width:100%;" role="alert" class="alert alert-{{ response_class }}">
+            <p style="display:table-cell; vertical-align:middle">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">
+                    {% if success is defined %}
+                        Success:
+                    {% elseif error is defined %}
+                        Error:
+                    {% endif %}
+                </span>
+                {% if success is defined %}
+                    <b>Success!</b> {{ success }}
+                {% elseif error is defined %}
+                    <b>Error!</b> {{ error }}
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <legend>Edit Information</legend>
+
+            <form class="form-horizontal form-club" role="form" method="post"
+                action="{{ path('kicks_clubs_manager_information_check') }}">
+                <div class="form-group">
+                    <div class="col-xs-3 text-right">
+                        <label>Description:</label>
+                    </div>
+                    <div class="col-xs-9">
+                        <textarea class="form-control resizable-vertical" name="description" rows="3"
+                            maxlength="512" placeholder="Club description" required>{{ club_description }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-3"></div>
+                    <div class="col-xs-9">
+                        <button type="submit" class="btn btn-lg btn-primary col-lg-5">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
