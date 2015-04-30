@@ -97,3 +97,7 @@ kicks_clubs_manager_information_check:
 kicks_clubs_manager_members:
     path:     /members/
     defaults: { _controller: NeikeqClubsBundle:Manager:members }
+
+kicks_clubs_manager_kickout:
+    path:     /kickout/
+    defaults: { _controller: NeikeqClubsBundle:Manager:kickOut }

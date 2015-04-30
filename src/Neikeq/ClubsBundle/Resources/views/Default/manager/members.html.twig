@@ -1,6 +1,6 @@
 {% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
 
-{% block title %}Member Requests{{ parent() }}{% endblock %}
+{% block title %}Member Management{{ parent() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -17,6 +17,11 @@
 
     <script>
         $(document).ready(function(){
+            $('#tableForm button').click(function(e) {
+                console.log('test');
+                e.stopPropagation();
+            });
+
             $('#memberModal').modal({
                 keyboard: true,
                 show: false,
@@ -131,8 +136,9 @@
                             <td class="col-md-2">{{ member.position|position }}</td>
                             <td class="col-md-2">{{ member.role }}</td>
                             <td class="col-md-1">
-                                <form class="action-form" action="#">
-                                    <input type="hidden" name="player_id" value="{{ member.id }}">
+                                <form id="tableForm" class="action-form"
+                                    action="{{ path('kicks_clubs_manager_kickout') }}" method="post">
+                                    <input type="hidden" name="member_id" value="{{ member.id }}">
                                     <button type="submit" class="btn btn-xs btn-warning pull-left">
                                         Kick out
                                     </button>

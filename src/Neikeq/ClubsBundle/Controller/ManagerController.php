@@ -353,4 +353,52 @@ class ManagerController extends Controller
 
         return $this->render('NeikeqClubsBundle:Default:manager/members.html.twig', $params);
     }
+
+    public function kickOutAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER', null);
+
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
+
+        if (PlayerUtils::mustSelectCharacter($playerId)) {
+            return $this->redirect($this->generateUrl('kicks_clubs_character'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $role = PlayerUtils::getPlayerRole($playerId, $em);
+
+        if ($role != 'MANAGER') {
+            throw $this->createAccessDeniedException();
+        }
+
+        $memberToKickId = $request->request->get('member_id');
+        $memberToKick = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+            ->findOneMemberBy($memberToKickId);
+
+        $memberKickedName = null;
+
+        if ($role == 'MANAGER' && !is_null($memberToKick)) {
+            $memberToKickRole = $memberToKick->getRole();
+
+            if ($memberToKickRole == 'MEMBER' || $memberToKickRole == 'CAPTAIN') {
+                $memberKickedName = PlayerUtils::getCharacterName($memberToKickId, $em);
+
+                $em->remove($memberToKick);
+                $em->flush();
+            }
+        }
+
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = $role;
+
+        // params for the twig template
+        $params = array('player' => $playerInfo);
+
+        if (!is_null($memberKickedName)) {
+            $params['member_kicked'] = $memberKickedName;
+        }
+
+        return $this->render('NeikeqClubsBundle:Default:manager/kickout.html.twig', $params);
+    }
 }
