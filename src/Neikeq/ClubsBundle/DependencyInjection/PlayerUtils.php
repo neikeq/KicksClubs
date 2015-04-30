@@ -35,6 +35,7 @@ class PlayerUtils
         $player = $em->getRepository('NeikeqClubsBundle:Characters')->find($playerId);
 
         return array(
+            'id' => $player->getId(),
             'name' => $player->getName(),
             'level' => $player->getLevel(),
             'position' => $player->getPosition()

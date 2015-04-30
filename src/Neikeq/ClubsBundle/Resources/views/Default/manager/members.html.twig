@@ -1,17 +1,184 @@
 {% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
 
 {% block title %}Member Requests{{ parent() }}{% endblock %}
-{% block stylesheets %}{{ parent() }}{% endblock %}
-{% block javascripts %}{{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubs.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@NeikeqClubsBundle/Resources/public/js/positions.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        $(document).ready(function(){
+            $('#memberModal').modal({
+                keyboard: true,
+                show: false,
+            }).on('show.bs.modal', function() {
+                var memberId = $('#memberModal').data('memberId');
+
+                $.ajax({
+                    url: '{{ path('kicks_clubs_ajax_member_info') }}',
+                    type: 'POST',
+                    data: { 'member_id' : memberId },
+                    beforeSend : function() {
+                        document.getElementById('memberView').style.display = 'none';
+                        $('#memberRow').html('');
+                    },
+                    success : function(result) {
+                        document.getElementById('memberView').style.display = 'block';
+
+                        var member = result['member'];
+                        var captainsCount = parseInt('{{captains_count}}');
+                        var role = member['role'];
+
+                        var roleOptionsHtml = '<option value="MEMBER"' +
+                            (role == 'MEMBER' ? 'selected' : '') + '>Member</option>';
+
+                        if (captainsCount < 2 || role == 'CAPTAIN') {
+                            roleOptionsHtml +=
+                                '<option value="CAPTAIN" ' + (role == 'CAPTAIN' ? 'selected' : '') +
+                                    '>Captain (' + (2 - captainsCount) + ')</option>';
+                        }
+
+                        $('#inputMemberId').val(memberId);
+
+                        memberRow =
+                            '<tr>\
+                                <td class="col-md-5">' + member['name'] + '</td>\
+                                <td class="col-md-2">' + member['level'] + '</td>\
+                                <td class="col-md-2">' + position(member['position']) + '</td>\
+                                <td class="col-md-2">' +
+                                    (role == 'MANAGER' ? role :
+                                        '<select class="form-control chosen-select" name="new_role" required>'
+                                            + roleOptionsHtml +
+                                        '</select>'
+                                    ) + '\
+                                </td>\
+                            </tr>';
+
+                        $('#memberRow').html($(memberRow));
+                    },
+                    error : function(textStatus, errorThrows) {
+                        console.log('Could not load member info!');
+                    }
+                });
+            });
+
+            $(".table-members").find('tr[data-target]').on('click', function(){
+                $('#memberModal').data('memberId', $(this).data('id'));
+            });
+        });
+    </script>
+{% endblock %}
 
 {% block navbar %}
     {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
 {% endblock %}
 
 {% block container %}
+    {% if success is defined %}
+        {% set response_class = 'success' %}
+    {% elseif error is defined %}
+        {% set response_class = 'danger' %}
+    {% endif %}
+
+    {% if success is defined or error is defined %}
+        <div style="display:table; width:100%;" role="alert" class="alert alert-{{ response_class }}">
+            <p style="display:table-cell; vertical-align:middle">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">
+                    {% if success is defined %}
+                        Success:
+                    {% elseif error is defined %}
+                        Error:
+                    {% endif %}
+                </span>
+                {% if success is defined %}
+                    The member information was updated successfully.
+                {% elseif error is defined %}
+                    <b>Error!</b> {{ error }}
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+
     <div class="panel panel-default">
         <div class="panel-body">
             <legend>Members Management</legend>
+
+            <table class="table table-hover table-bordered table-members">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Level</th>
+                        <th>Position</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in members %}
+                        <tr class="clickable-row" data-toggle="modal" data-id="{{ member.id }}" data-target="#memberModal">
+                            <td class="col-md-5">{{ member.name }}</td>
+                            <td class="col-md-2">{{ member.level }}</td>
+                            <td class="col-md-2">{{ member.position|position }}</td>
+                            <td class="col-md-2">{{ member.role }}</td>
+                            <td class="col-md-1">
+                                <form class="action-form" action="#">
+                                    <input type="hidden" name="player_id" value="{{ member.id }}">
+                                    <button type="submit" class="btn btn-xs btn-warning pull-left">
+                                        Kick out
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="memberModal" class="modal fade" role="dialog" aria-labelledby="clubModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Member</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form"
+                        action="{{ path('kicks_clubs_manager_members') }}" method="post">
+                        <div id="memberView">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Level</th>
+                                        <th>Position</th>
+                                        <th>Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="memberRow"></tbody>
+                            </table>
+                            <input id="inputMemberId" type="hidden" name="member_id" required>
+                            <div class="form-group">
+                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-md btn-primary col-lg-6 pull-right">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

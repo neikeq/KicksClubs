@@ -273,7 +273,7 @@ class ManagerController extends Controller
         return $this->render('NeikeqClubsBundle:Default:manager/information.html.twig', $params);
     }
 
-    public function membersAction()
+    public function membersAction(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null);
 
@@ -291,11 +291,65 @@ class ManagerController extends Controller
             throw $this->createAccessDeniedException();
         }
 
+        $clubId = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+            ->findOneMemberBy($playerId)->getClubId();
+
+        $memberId = $request->request->get('member_id');
+
+        $error = null;
+
+        if (!is_null($memberId)) {
+            $member = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+                ->findOneMemberBy($memberId);
+
+            if (is_null($member) || $member->getClubId() != $clubId) {
+                $error = 'Invalid member specified.';
+            } else {
+                $newRole = $request->request->get('new_role');
+                $currentRole = $member->getRole();
+
+                if (!is_null($newRole) && $newRole != $currentRole) {
+                    if ($currentRole != 'MANAGER') {
+                        $validNewRole = $newRole == 'MEMBER';
+
+                        if (!$validNewRole && $newRole == 'CAPTAIN') {
+                            $captains = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+                                ->findAllCaptainsBy($clubId);
+                            $validNewRole = count($captains) < 2;
+
+                            if (!$validNewRole) {
+                                $error = 'The club already have the maximum ' .
+                                    'number of captains allowed.';
+                            }
+                        } else if (!$validNewRole) {
+                            $error = 'Invalid member role specified.';
+                        }
+
+                        if ($validNewRole) {
+                            $member->setRole($newRole);
+                            $em->persist($member);
+                            $em->flush();
+                        }
+                    } else {
+                        $error = 'Club manager cannot change its own role.';
+                    }
+                }
+            }
+        }
+
+        $members = ClubUtils::clubMembersInfo($clubId, $em);
+        $captains = $em->getRepository('NeikeqClubsBundle:ClubMembers')->findAllCaptainsBy($clubId);
+
         $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
         $playerInfo['role'] = $role;
 
         // params for the twig template
-        $params = array('player' => $playerInfo);
+        $params = array('player' => $playerInfo, 'members' => $members,
+            'captains_count' => count($captains));
+
+        if (!is_null($error)) {
+            $params['error'] = $error;
+        }
 
         return $this->render('NeikeqClubsBundle:Default:manager/members.html.twig', $params);
     }

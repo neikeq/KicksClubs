@@ -7,10 +7,27 @@ use Neikeq\ClubsBundle\DependencyInjection\PlayerUtils;
 use Neikeq\ClubsBundle\DependencyInjection\PlayerRoles;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class MemberController extends Controller
+class MembersController extends Controller
 {
+    public function ajaxMemberInfoAction(Request $request)
+    {
+        if ($request->isXMLHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $playerId = $request->request->get('member_id');
+            $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
+            $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
+
+            return new JsonResponse(array('member' => $playerInfo));
+        }
+
+        return new Response('This is not a valid ajax request.', 400);
+    }
+
     public function joinAction(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null);

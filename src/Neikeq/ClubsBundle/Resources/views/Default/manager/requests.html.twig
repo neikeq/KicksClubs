@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/requests.css' %}
+    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/members.css' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
@@ -46,7 +46,7 @@
         <div class="panel-body">
             <legend>Member Requests</legend>
 
-            <table class="table table-hover table-bordered table-clubs">
+            <table class="table table-hover table-bordered">
                 <thead>
                     <tr>
                         <th>Name</th>

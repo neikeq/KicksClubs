@@ -43,7 +43,8 @@
             <legend>Club creation</legend>
 
             {% if player.level >= 25 %}
-                <form class="form-horizontal form-club" role="form" action="{{ path('kicks_clubs_create_check') }}" method="post">
+                <form class="form-horizontal form-club" role="form"
+                    action="{{ path('kicks_clubs_create_check') }}" method="post">
                     <div class="form-group">
                         <div class="col-xs-3 text-right">
                             <label>Club name:</label>

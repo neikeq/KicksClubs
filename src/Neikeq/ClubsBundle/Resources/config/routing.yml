@@ -46,29 +46,33 @@ kicks_clubs_ajax_club_info:
     path:     /ajax/clubinfo/
     defaults: { _controller: NeikeqClubsBundle:Clubs:ajaxClubInfo }
 
+kicks_clubs_ajax_member_info:
+    path:     /ajax/memberinfo/
+    defaults: { _controller: NeikeqClubsBundle:Members:ajaxMemberInfo }
+
 kicks_clubs_member_join:
     path:     /join/
-    defaults: { _controller: NeikeqClubsBundle:Member:join }
+    defaults: { _controller: NeikeqClubsBundle:Members:join }
 
 kicks_clubs_member_join_check:
     path:     /join_check/
-    defaults: { _controller: NeikeqClubsBundle:Member:joinCheck }
+    defaults: { _controller: NeikeqClubsBundle:Members:joinCheck }
 
 kicks_clubs_member_request:
     path:     /request/
-    defaults: { _controller: NeikeqClubsBundle:Member:request }
+    defaults: { _controller: NeikeqClubsBundle:Members:request }
 
 kicks_clubs_member_request_cancel:
     path:     /request_cancel/
-    defaults: { _controller: NeikeqClubsBundle:Member:requestCancel }
+    defaults: { _controller: NeikeqClubsBundle:Members:requestCancel }
 
 kicks_clubs_member_leave:
     path:     /leave/
-    defaults: { _controller: NeikeqClubsBundle:Member:leave }
+    defaults: { _controller: NeikeqClubsBundle:Members:leave }
 
 kicks_clubs_member_leave_check:
     path:     /leave_check/
-    defaults: { _controller: NeikeqClubsBundle:Member:leaveCheck }
+    defaults: { _controller: NeikeqClubsBundle:Members:leaveCheck }
 
 kicks_clubs_manager_requests:
     path:     /requests/

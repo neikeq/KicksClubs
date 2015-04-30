@@ -30,8 +30,8 @@
                 $('#clubModal').find('#navTabInfo').addClass('active');
 
                 $.ajax({
-                    url: "{{ path('kicks_clubs_ajax_club_info') }}" ,
-                    type: "POST",
+                    url: '{{ path('kicks_clubs_ajax_club_info') }}',
+                    type: 'POST',
                     data: { 'club_id' : clubId },
                     beforeSend : function() {
                         document.getElementById('clubView').style.display = 'none';
@@ -56,8 +56,8 @@
                         for (i = 0; i < clubInfo['members'].length; i++) {
                             var member = clubInfo['members'][i];
 
-                            memberRows += '\
-                                <tr>\
+                            memberRows +=
+                                '<tr>\
                                     <td class="col-md-5">' + member['name'] + '</td>\
                                     <td class="col-md-2">' + member['level'] + '</td>\
                                     <td class="col-md-2">' + position(member['position']) + '</td>\
@@ -198,7 +198,6 @@
                     </ul>
                 </div>
                 <div class="modal-body">
-                    <div id="clubViewHide" style="display: none"></div>
                     <div id="clubView" role="tabpanel">
                         <!-- Tab panes -->
                         <div style="overflow: hidden" class="tab-content">
@@ -239,7 +238,7 @@
                                 </div>
                             </div>
                             <div style="padding-top: 25px" role="tabpanel" class="tab-pane" id="tabMembers">
-                                <table class="table table-hover table-bordered table-clubs">
+                                <table class="table table-hover table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Name</th>

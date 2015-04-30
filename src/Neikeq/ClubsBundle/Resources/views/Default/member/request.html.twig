@@ -1,9 +1,7 @@
 {% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
 
 {% block title %}Request{{ parent() }}{% endblock %}
-
 {% block stylesheets %}{{ parent() }}{% endblock %}
-
 {% block javascripts %}{{ parent() }}{% endblock %}
 
 {% block navbar %}
@@ -16,7 +14,7 @@
             <legend>Member Requests</legend>
 
             {% if request is defined %}
-                <table class="table table-hover table-bordered table-clubs">
+                <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>Club name</th>

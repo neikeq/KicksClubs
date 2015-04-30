@@ -29,6 +29,11 @@ class ClubMembersRepository extends EntityRepository
         return $this->matching($criteria);
     }
 
+    public function findAllCaptainsBy($clubId)
+    {
+        return $this->findBy(array('clubId' => $clubId, 'role' => 'CAPTAIN'));
+    }
+
     public function findAllPendingMembersBy($clubId)
     {
         return $this->findBy(array('clubId' => $clubId, 'role' => 'PENDING'));
