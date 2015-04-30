@@ -19,6 +19,7 @@ class ClubUtils
         $members = self::clubMembersInfo($clubId, $em);
 
         return array(
+            'id' => $club->getId(),
             'name' => $club->getName(),
             'description' => $club->getDescription(),
             'membership' => $club->getMembershipMode(),

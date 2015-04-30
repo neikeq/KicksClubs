@@ -19,6 +19,13 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div role="tabpanel">
+                {% if player.role|grants('MEMBER') and not player.role|grants('MANAGER') %}
+                    <form action="{{ path('kicks_clubs_member_leave') }}" method="post" aria-hidden="true">
+                        <input type="hidden" name="club_id" value="{{ club.id }}">
+                        <button type="submit" class="btn btn-danger btn-sm pull-right">Leave</button>
+                    </form>
+                {% endif %}
+
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active">
