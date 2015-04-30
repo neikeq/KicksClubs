@@ -2,13 +2,13 @@
 
 {% block title %}Edit Information{{ parent() }}{% endblock %}
 
-{% block stylesheets %}{{ parent() }}{% endblock %}
-{% block javascripts %}
+{% block stylesheets %}
     {{ parent() }}
     {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubform.css' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
+{% block javascripts %}{{ parent() }}{% endblock %}
 
 {% block navbar %}
     {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}

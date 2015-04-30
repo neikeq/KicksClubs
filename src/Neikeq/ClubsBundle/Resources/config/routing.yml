@@ -101,3 +101,11 @@ kicks_clubs_manager_members:
 kicks_clubs_manager_kickout:
     path:     /kickout/
     defaults: { _controller: NeikeqClubsBundle:Manager:kickOut }
+
+kicks_clubs_manager_advanced:
+    path:     /advanced/
+    defaults: { _controller: NeikeqClubsBundle:Manager:advanced }
+
+kicks_clubs_manager_membership_update:
+    path:     /membership_update/
+    defaults: { _controller: NeikeqClubsBundle:Manager:membershipUpdate }

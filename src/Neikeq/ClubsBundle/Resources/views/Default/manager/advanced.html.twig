@@ -1,0 +1,100 @@
+{% extends 'NeikeqClubsBundle:Default:templates/base.html.twig' %}
+
+{% block title %}Advanced{{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubform.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@NeikeqClubsBundle/Resources/public/js/popover.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block navbar %}
+    {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
+{% endblock %}
+
+{% set membership_popover %}
+    {% filter escape %}
+        {% include 'NeikeqClubsBundle:Default:templates/membership.html.twig' %}
+    {% endfilter %}
+{% endset %}
+
+{% block container %}
+    {% if success|length > 0 %}
+        <div style="display:table; width:100%;" role="alert" class="alert alert-success">
+            {% for success_message in success %}
+                <p style="display:table-cell; vertical-align:middle">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Success:</span>
+                    {{ success_message }}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if errors|length > 0 %}
+        <div style="display:table; width:100%;" role="alert" class="alert alert-danger">
+            {% for error in errors %}
+                <p style="display:table-cell; vertical-align:middle">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <legend>Advanced Settings</legend>
+
+            <form class="form-horizontal form-club" role="form" method="post"
+                action="{{ path('kicks_clubs_manager_advanced') }}">
+                <div class="form-group">
+                    <div class="col-xs-3 text-right">
+                        <label>Membership mode:</label>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary {% if membership_mode == "APPROVED" %}active{% endif %}">
+                                <input type="radio" name="membership" value="APPROVED"
+                                    {% if membership_mode == "APPROVED" %}checked{% endif %} required>
+                                Approved
+                            </label>
+                            <label class="btn btn-primary {% if membership_mode == "IMMEDIATE" %}active{% endif %}">
+                                <input type="radio" name="membership" value="IMMEDIATE"
+                                    {% if membership_mode == "IMMEDIATE" %}checked{% endif %} required>
+                                Immediate
+                            </label>
+                            <label class="btn btn-primary {% if membership_mode == "DISCONTINUED" %}active{% endif %}">
+                                <input type="radio" name="membership" value="DISCONTINUED"
+                                    {% if membership_mode == "DISCONTINUED" %}checked{% endif %} required>
+                                Discontinued
+                            </label>
+                        </div>
+
+                        <a tabindex="0" class="btn btn-link" role="button" data-container="body"
+                            data-toggle="popover" data-trigger="hover" data-placement="right"
+                            data-html="true" data-content="{{ membership_popover }}">
+                            ?
+                        </a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-3"></div>
+                    <div class="col-xs-9">
+                        <button type="submit" class="btn btn-lg btn-warning col-lg-5">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

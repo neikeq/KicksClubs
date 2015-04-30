@@ -401,4 +401,56 @@ class ManagerController extends Controller
 
         return $this->render('NeikeqClubsBundle:Default:manager/kickout.html.twig', $params);
     }
+
+    public function advancedAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER', null);
+
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
+
+        if (PlayerUtils::mustSelectCharacter($playerId)) {
+            return $this->redirect($this->generateUrl('kicks_clubs_character'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $role = PlayerUtils::getPlayerRole($playerId, $em);
+
+        if ($role != 'MANAGER') {
+            throw $this->createAccessDeniedException();
+        }
+
+        $clubId = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+            ->findOneMemberBy($playerId)->getClubId();
+        $club = $em->getRepository('NeikeqClubsBundle:Clubs')
+            ->findOneBy(array('id' => $clubId));
+
+        $newMembership = $request->request->get('membership');
+
+        $errors = array();
+        $success = array();
+
+        if (!is_null($newMembership)) {
+            // if the membership mode is valid
+            if (in_array($newMembership, array('APPROVED', 'IMMEDIATE', 'DISCONTINUED'), true)) {
+                // update membership mode
+                $club->setMembershipMode($newMembership);
+                $em->persist($club);
+                $em->flush();
+
+                array_push($success, 'Membership mode set to: ' . $newMembership);
+            } else {
+                array_push($errors, 'Invalid membership mode.');
+            }
+        }
+
+        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
+        $playerInfo['role'] = $role;
+
+        // params for the twig template
+        $params = array('player' => $playerInfo, 'membership_mode' => $club->getMembershipMode(),
+            'errors' => $errors, 'success' => $success);
+
+        return $this->render('NeikeqClubsBundle:Default:manager/advanced.html.twig', $params);
+    }
 }
