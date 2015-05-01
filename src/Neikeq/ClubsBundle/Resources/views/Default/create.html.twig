@@ -4,22 +4,20 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubform.css' %}
-        <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% endstylesheets %}
-
-    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/xbbcode.css' %}
+    {% stylesheets filter='cssrewrite'
+        'bundles/neikeqclubs/css/clubform.css'
+        'bundles/neikeqclubs/css/xbbcode.css'
+    %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts '@NeikeqClubsBundle/Resources/public/js/popover.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% javascripts '@NeikeqClubsBundle/Resources/public/js/xbbcode.js' %}
+    {% javascripts
+        '@NeikeqClubsBundle/Resources/public/js/popover.js'
+        '@NeikeqClubsBundle/Resources/public/js/xbbcode.js'
+    %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 

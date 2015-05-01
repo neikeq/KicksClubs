@@ -4,11 +4,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubform.css' %}
-        <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% endstylesheets %}
-
-    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/xbbcode.css' %}
+    {% stylesheets filter='cssrewrite'
+        'bundles/neikeqclubs/css/clubform.css'
+        'bundles/neikeqclubs/css/xbbcode.css'
+    %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
@@ -31,9 +30,6 @@
                     removeMisalignedTags: false,
                     addInLineBreaks: true
                 });
-
-                console.log(descriptionSource);
-                console.log(preview);
 
                 $('#descrPreview').html(preview.html);
 

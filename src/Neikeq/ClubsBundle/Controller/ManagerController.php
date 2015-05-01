@@ -309,29 +309,40 @@ class ManagerController extends Controller
                 $currentRole = $member->getRole();
 
                 if (!is_null($newRole) && $newRole != $currentRole) {
-                    if ($currentRole != 'MANAGER') {
-                        $validNewRole = $newRole == 'MEMBER';
-
-                        if (!$validNewRole && $newRole == 'CAPTAIN') {
-                            $captains = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-                                ->findAllCaptainsBy($clubId);
-                            $validNewRole = count($captains) < 2;
-
-                            if (!$validNewRole) {
-                                $error = 'The club already have the maximum ' .
-                                    'number of captains allowed.';
-                            }
-                        } else if (!$validNewRole) {
-                            $error = 'Invalid member role specified.';
-                        }
-
-                        if ($validNewRole) {
-                            $member->setRole($newRole);
-                            $em->persist($member);
-                            $em->flush();
-                        }
-                    } else {
+                    if ($currentRole == 'MANAGER') {
                         $error = 'Club manager cannot change its own role.';
+                    } else {
+                        switch ($newRole) {
+                            case 'MEMBER':
+                                $member->setRole($newRole);
+                                $em->persist($member);
+                                $em->flush();
+                                break;
+                            case 'CAPTAIN':
+                                $captains = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+                                    ->findAllCaptainsBy($clubId);
+
+                                if (count($captains) < 2) {
+                                    $member->setRole($newRole);
+                                    $em->persist($member);
+                                    $em->flush();
+                                } else {
+                                    $error = 'The club already have the maximum ' .
+                                        'number of captains allowed.';
+                                }
+                                break;
+                            case 'MANAGER':
+                                $manager = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+                                    ->findOneBy(array('role' => $newRole));
+                                $manager->setRole('MEMBER');
+                                $member->setRole($newRole);
+                                $em->persist($manager);
+                                $em->persist($member);
+                                $em->flush();
+                                break;
+                            default:
+                                $error = 'Invalid member role specified.';
+                        }
                     }
                 }
             }

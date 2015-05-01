@@ -16,9 +16,9 @@
     {% endjavascripts %}
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('#tableForm button').click(function(e) {
-                console.log('test');
+                // to avoid displaying modal when clicking 'Kicks out'
                 e.stopPropagation();
             });
 
@@ -26,6 +26,10 @@
                 keyboard: true,
                 show: false,
             }).on('show.bs.modal', function() {
+                // Display the save button as primary
+                $('#saveButton').removeClass('btn-danger');
+                $('#saveButton').addClass('btn-primary');
+
                 var memberId = $('#memberModal').data('memberId');
 
                 $.ajax({
@@ -52,6 +56,8 @@
                                     '>Captain (' + (2 - captainsCount) + ')</option>';
                         }
 
+                        roleOptionsHtml += '<option value="MANAGER">Manager</option>';
+
                         $('#inputMemberId').val(memberId);
 
                         memberRow =
@@ -61,7 +67,7 @@
                                 <td class="col-md-2">' + position(member['position']) + '</td>\
                                 <td class="col-md-2">' +
                                     (role == 'MANAGER' ? role :
-                                        '<select class="form-control chosen-select" name="new_role" required>'
+                                        '<select class="form-control chosen-select role-select" name="new_role" required>'
                                             + roleOptionsHtml +
                                         '</select>'
                                     ) + '\
@@ -69,6 +75,18 @@
                             </tr>';
 
                         $('#memberRow').html($(memberRow));
+
+                        // Add event handler for the role select change event
+                        $('.role-select').on('change', function() {
+                            // If the role selected is MANAGER, display the save button as danger
+                            if ($(this).val() == 'MANAGER') {
+                                $('#saveButton').removeClass('btn-primary');
+                                $('#saveButton').addClass('btn-danger');
+                            } else {
+                                $('#saveButton').removeClass('btn-danger');
+                                $('#saveButton').addClass('btn-primary');
+                            }
+                        });
                     },
                     error : function(textStatus, errorThrows) {
                         console.log('Could not load member info!');
@@ -176,7 +194,7 @@
                             <div class="form-group">
                                 <div class="col-md-6"></div>
                                 <div class="col-md-6">
-                                    <button type="submit" class="btn btn-md btn-primary col-lg-6 pull-right">
+                                    <button id="saveButton" type="submit" class="btn btn-md btn-primary col-lg-6 pull-right">
                                         Save
                                     </button>
                                 </div>

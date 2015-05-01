@@ -4,22 +4,20 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubs.css' %}
-        <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% endstylesheets %}
-
-    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/xbbcode.css' %}
+    {% stylesheets filter='cssrewrite'
+        'bundles/neikeqclubs/css/clubs.css'
+        'bundles/neikeqclubs/css/xbbcode.css'
+    %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts '@NeikeqClubsBundle/Resources/public/js/positions.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% javascripts '@NeikeqClubsBundle/Resources/public/js/xbbcode.js' %}
+    {% javascripts
+        '@NeikeqClubsBundle/Resources/public/js/positions.js'
+        '@NeikeqClubsBundle/Resources/public/js/xbbcode.js'
+    %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
@@ -189,11 +187,6 @@
                         <form action="{{ path('kicks_clubs_member_join') }}" method="post" aria-hidden="true">
                             <input id ="inputClubId" type="hidden" name="club_id">
                             <button type="submit" class="btn btn-success btn-sm pull-right">Join</button>
-                        </form>
-                    {% elseif player.role|grants('MEMBER') and not player.role|grants('MANAGER') %}
-                        <form action="{{ path('kicks_clubs_member_leave') }}" method="post" aria-hidden="true">
-                            <input id ="inputClubId" type="hidden" name="club_id">
-                            <button type="submit" class="btn btn-danger btn-sm pull-right">Leave</button>
                         </form>
                     {% endif %}
 

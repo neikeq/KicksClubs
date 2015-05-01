@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 
 class ClubMembersRepository extends EntityRepository
-{
+{    
     public function findOneMemberBy($playerId)
     {
         $criteria = new Criteria();
