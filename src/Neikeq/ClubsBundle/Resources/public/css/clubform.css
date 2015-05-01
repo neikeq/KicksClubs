@@ -17,3 +17,15 @@
 .popover {
     max-width: 600px;
 }
+
+.text-source {
+    border-radius: 0;
+    border-top: none;
+    padding-top: 20px;
+}
+
+.text-preview {
+    border: 1px solid #DDD;
+    border-top: none;
+    padding: 20px;
+}

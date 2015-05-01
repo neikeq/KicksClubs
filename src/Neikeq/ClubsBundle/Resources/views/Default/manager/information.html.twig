@@ -7,8 +7,46 @@
     {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubform.css' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
+
+    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/xbbcode.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
 {% endblock %}
-{% block javascripts %}{{ parent() }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@NeikeqClubsBundle/Resources/public/js/xbbcode.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        $(document).ready(function(){
+            $('#descrPreviewTab a').click(function (e) {
+                e.preventDefault();
+
+                var descriptionSource = $('#descrText').val();
+
+                var preview = XBBCODE.process({
+                    text: descriptionSource,
+                    removeMisalignedTags: false,
+                    addInLineBreaks: true
+                });
+
+                console.log(descriptionSource);
+                console.log(preview);
+
+                $('#descrPreview').html(preview.html);
+
+                $(this).tab('show');
+            });
+
+            $('#descrSourceTab a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+    </script>
+{% endblock %}
 
 {% block navbar %}
     {% include 'NeikeqClubsBundle:Default:templates/navbar.html.twig' %}
@@ -51,9 +89,32 @@
                     <div class="col-xs-3 text-right">
                         <label>Description:</label>
                     </div>
+
                     <div class="col-xs-9">
-                        <textarea class="form-control resizable-vertical" name="description" rows="3"
-                            maxlength="512" placeholder="Club description" required>{{ club_description }}</textarea>
+                        <div role="tabpanel">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li id="descrSourceTab" role="presentation" class="active">
+                                    <a href="#descrSource"
+                                        aria-controls="source" role="tab" data-toggle="tab">Source</a>
+                                </li>
+                                <li id="descrPreviewTab" role="presentation">
+                                    <a href="#descrPreview"
+                                        aria-controls="preview" role="tab" data-toggle="tab">Preview</a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div id="descrSource" role="tabpanel" class="tab-pane active">
+                                    <textarea id="descrText" class="form-control resizable-vertical text-source"
+                                        name="description" rows="6" maxlength="512" placeholder="Club description" required>{{
+                                        club_description
+                                    }}</textarea>
+                                </div>
+                                <div id="descrPreview" role="tabpanel" class="tab-pane text-preview"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

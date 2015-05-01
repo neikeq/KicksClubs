@@ -7,11 +7,19 @@
     {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/clubs.css' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
+
+    {% stylesheets filter='cssrewrite' 'bundles/neikeqclubs/css/xbbcode.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% javascripts '@NeikeqClubsBundle/Resources/public/js/positions.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts '@NeikeqClubsBundle/Resources/public/js/xbbcode.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
@@ -43,13 +51,19 @@
 
                         document.getElementById('clubView').style.display = 'block';
 
+                        var description = XBBCODE.process({
+                            text: clubInfo['description'],
+                            removeMisalignedTags: false,
+                            addInLineBreaks: true
+                        });
+
                         $('#clubModal').find('#inputClubId').val(clubId);
                         $('#clubModal').find('#clubName').html(clubInfo['name']);
                         $('#clubModal').find('#clubManager').html(clubInfo['manager']);
                         $('#clubModal').find('#clubCreation').html(clubInfo['creation']);
                         $('#clubModal').find('#clubMembers').html(clubInfo['members'].length);
                         $('#clubModal').find('#clubMembership').html(clubInfo['membership']);
-                        $('#clubModal').find('#clubDescription').html(clubInfo['description']);
+                        $('#clubModal').find('#clubDescription').html(description.html);
 
                         var memberRows = '';
 
@@ -233,7 +247,7 @@
 
                                     <div class="col-md-12 col-lg-12">
                                         <legend>Description</legend>
-                                        <div class="well" id="clubDescription"></div>
+                                        <div class="container" id="clubDescription"></div>
                                     </div>
                                 </div>
                             </div>
