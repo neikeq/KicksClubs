@@ -28,7 +28,8 @@
                             <td {% if request.status == 'REJECTED' %}style="color: red"{% endif %}
                                 class="col-md-2">{{ request.status }}</td>
                             <td class="col-md-1">
-                                <form class="action-form" action="{{ path('kicks_clubs_member_request_cancel') }}" method="post">
+                                <form class="action-form" action="{{ path('kicks_clubs_member_request') }}" method="post">
+                                    <input type="hidden" name="remove_request" value="1">
                                     <button type="submit" class="btn btn-xs btn-danger pull-left reject-btn">
                                         {% if request.status == 'REJECTED' %}
                                             Remove
@@ -42,7 +43,7 @@
                     </tbody>
                 </table>
             {% else %}
-                <p>You did not send any member request yet.</p>
+                <p>There is no member request.</p>
             {% endif %}
         </div>
     </div>

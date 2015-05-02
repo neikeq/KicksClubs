@@ -121,7 +121,7 @@ class MembersController extends Controller
         return $this->render('NeikeqClubsBundle:Default:member/join-result.html.twig', $params);
     }
 
-    public function requestAction()
+    public function requestAction(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null);
 
@@ -137,7 +137,7 @@ class MembersController extends Controller
             ->findOnePendingOrRejectedMemberBy($playerId);
         $role = is_null($clubMemberRequest) ? null : $clubMemberRequest->getRole();
 
-        $request = null;
+        $memberRequest = null;
 
         if (is_null($clubMemberRequest)) {
             $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->findOneMemberBy($playerId);
@@ -147,50 +147,14 @@ class MembersController extends Controller
                 return $this->redirect($this->generateUrl('kicks_clubs'));
             }
         } else {
-            $club = $em->getRepository('NeikeqClubsBundle:Clubs')
-                ->findOneBy(array('id' => $clubMemberRequest->getClubId()));
-            $request = array('club_name' => $club->getName(), 'status' => $role);
-        }
-
-        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
-        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
-
-        // params for the twig template
-        $params = array('player' => $playerInfo);
-
-        if (!is_null($request)) {
-            $params['request'] = $request;
-        }
-
-        return $this->render('NeikeqClubsBundle:Default:member/request.html.twig', $params);
-    }
-
-    public function requestCancelAction()
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER', null);
-
-        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
-
-        if (PlayerUtils::mustSelectCharacter($playerId)) {
-            return $this->redirect($this->generateUrl('kicks_clubs_character'));
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $clubMemberRequest = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-            ->findOnePendingOrRejectedMemberBy($playerId);
-        $role = is_null($clubMemberRequest) ? null : $clubMemberRequest->getRole();
-
-        if (is_null($clubMemberRequest)) {
-            $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->findOneMemberBy($playerId);
-            // if the player is already in a club
-            if (!is_null($clubMember)) {
-                // the player should not be allowed to access this route
-                return $this->redirect($this->generateUrl('kicks_clubs'));
+            if ($request->request->has('remove_request')) {
+                $em->remove($clubMemberRequest);
+                $em->flush();
+            } else {
+                $club = $em->getRepository('NeikeqClubsBundle:Clubs')
+                    ->findOneBy(array('id' => $clubMemberRequest->getClubId()));
+                $memberRequest = array('club_name' => $club->getName(), 'status' => $role);
             }
-        } else {
-            $em->remove($clubMemberRequest);
-            $em->flush();
         }
 
         $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
@@ -198,6 +162,10 @@ class MembersController extends Controller
 
         // params for the twig template
         $params = array('player' => $playerInfo);
+
+        if (!is_null($memberRequest)) {
+            $params['request'] = $memberRequest;
+        }
 
         return $this->render('NeikeqClubsBundle:Default:member/request.html.twig', $params);
     }

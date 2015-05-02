@@ -34,10 +34,6 @@ kicks_clubs_create:
     path:     /create/
     defaults: { _controller: NeikeqClubsBundle:Creation:create }
 
-kicks_clubs_create_check:
-    path:     /create_check/
-    defaults: { _controller: NeikeqClubsBundle:Creation:createCheck }
-
 kicks_clubs_club:
     path:     /club/
     defaults: { _controller: NeikeqClubsBundle:Clubs:club }
@@ -62,10 +58,6 @@ kicks_clubs_member_request:
     path:     /request/
     defaults: { _controller: NeikeqClubsBundle:Members:request }
 
-kicks_clubs_member_request_cancel:
-    path:     /request_cancel/
-    defaults: { _controller: NeikeqClubsBundle:Members:requestCancel }
-
 kicks_clubs_member_leave:
     path:     /leave/
     defaults: { _controller: NeikeqClubsBundle:Members:leave }
@@ -78,21 +70,9 @@ kicks_clubs_manager_requests:
     path:     /requests/
     defaults: { _controller: NeikeqClubsBundle:Manager:requests }
 
-kicks_clubs_manager_request_accept:
-    path:     /request_accept/
-    defaults: { _controller: NeikeqClubsBundle:Manager:requestAccept }
-
-kicks_clubs_manager_request_reject:
-    path:     /request_reject/
-    defaults: { _controller: NeikeqClubsBundle:Manager:requestReject }
-
 kicks_clubs_manager_information:
     path:     /information/
     defaults: { _controller: NeikeqClubsBundle:Manager:information }
-
-kicks_clubs_manager_information_check:
-    path:     /information_check/
-    defaults: { _controller: NeikeqClubsBundle:Manager:informationCheck }
 
 kicks_clubs_manager_members:
     path:     /members/

@@ -49,29 +49,27 @@
 {% endblock %}
 
 {% block container %}
-    {% if success is defined %}
-        {% set response_class = 'success' %}
-    {% elseif error is defined %}
-        {% set response_class = 'danger' %}
+    {% if success|length > 0 %}
+        <div style="display:table; width:100%;" role="alert" class="alert alert-success">
+            {% for success_message in success %}
+                <p style="display:table-cell; vertical-align:middle">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Success:</span>
+                    {{ success_message }}
+                </p>
+            {% endfor %}
+        </div>
     {% endif %}
 
-    {% if success is defined or error is defined %}
-        <div style="display:table; width:100%;" role="alert" class="alert alert-{{ response_class }}">
-            <p style="display:table-cell; vertical-align:middle">
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                <span class="sr-only">
-                    {% if success is defined %}
-                        Success:
-                    {% elseif error is defined %}
-                        Error:
-                    {% endif %}
-                </span>
-                {% if success is defined %}
-                    <b>Success!</b> {{ success }}
-                {% elseif error is defined %}
-                    <b>Error!</b> {{ error }}
-                {% endif %}
-            </p>
+    {% if errors|length > 0 %}
+        <div style="display:table; width:100%;" role="alert" class="alert alert-danger">
+            {% for error in errors %}
+                <p style="display:table-cell; vertical-align:middle">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    {{ error }}
+                </p>
+            {% endfor %}
         </div>
     {% endif %}
 
@@ -80,7 +78,7 @@
             <legend>Edit Information</legend>
 
             <form class="form-horizontal form-club" role="form" method="post"
-                action="{{ path('kicks_clubs_manager_information_check') }}">
+                action="{{ path('kicks_clubs_manager_information') }}">
                 <div class="form-group">
                     <div class="col-xs-3 text-right">
                         <label>Description:</label>
@@ -104,7 +102,7 @@
                             <div class="tab-content">
                                 <div id="descrSource" role="tabpanel" class="tab-pane active">
                                     <textarea id="descrText" class="form-control resizable-vertical text-source"
-                                        name="description" rows="6" maxlength="512" placeholder="Club description" required>{{
+                                        name="description" rows="6" maxlength="512" placeholder="Club description">{{
                                         club_description
                                     }}</textarea>
                                 </div>

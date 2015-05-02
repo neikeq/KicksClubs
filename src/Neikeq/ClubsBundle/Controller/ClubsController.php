@@ -85,13 +85,18 @@ class ClubsController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $role = PlayerUtils::getPlayerRole($playerId, $em);
+
+        if (!PlayerRoles::isGranted('MEMBER', $role)) {
+            return $this->redirect($this->generateUrl('kicks_clubs_clubs'));
+        }
 
         $clubMember = $em->getRepository('NeikeqClubsBundle:ClubMembers')->findOneMemberBy($playerId);
 
         $clubInfo = ClubUtils::clubInfo($clubMember->getClubId(), $em);
 
         $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
-        $playerInfo['role'] = PlayerUtils::getPlayerRole($playerId, $em);
+        $playerInfo['role'] = $role;
 
         // params for the twig template
         $params = array('player' => $playerInfo, 'club' => $clubInfo);

@@ -34,9 +34,9 @@
                     {% endif %}
                 </span>
                 {% if success is defined %}
-                    <b>Success!</b> {{ success }}
+                    {{ success }}
                 {% elseif error is defined %}
-                    <b>Error!</b> {{ error }}
+                    {{ error }}
                 {% endif %}
             </p>
         </div>
@@ -62,14 +62,16 @@
                             <td class="col-md-2">{{ request.level }}</td>
                             <td class="col-md-2">{{ request.position|position }}</td>
                             <td class="col-md-2">
-                                <form class="action-form" action="{{ path('kicks_clubs_manager_request_accept') }}" method="post">
+                                <form class="action-form" action="{{ path('kicks_clubs_manager_requests') }}" method="post">
                                     <input type="hidden" name="player_id" value="{{ request.id }}">
+                                    <input type="hidden" name="accept" value="1">
                                     <button type="submit" class="btn btn-xs btn-success pull-left accept-btn">
                                         Accept
                                     </button>
                                 </form>
-                                <form class="action-form" action="{{ path('kicks_clubs_manager_request_reject') }}" method="post">
+                                <form class="action-form" action="{{ path('kicks_clubs_manager_requests') }}" method="post">
                                     <input type="hidden" name="player_id" value="{{ request.id }}">
+                                    <input type="hidden" name="reject" value="1">
                                     <button type="submit" class="btn btn-xs btn-default pull-left reject-btn">
                                         Reject
                                     </button>

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ManagerController extends Controller
 {
-    public function requestsAction()
+    public function requestsAction(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null);
 
@@ -32,61 +32,27 @@ class ManagerController extends Controller
         $clubId = $em->getRepository('NeikeqClubsBundle:ClubMembers')
             ->findOneMemberBy($playerId)->getClubId();
 
-        $pendingRequests = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-            ->findAllPendingMembersBy($clubId);
-
-        $requests = array();
-
-        foreach ($pendingRequests as $pendingRequest) {
-            $request = $em->getRepository('NeikeqClubsBundle:Characters')
-                ->findOneBy(array('id' => $pendingRequest->getId()));
-            array_push($requests, $request);
-        }
-
-        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
-        $playerInfo['role'] = $role;
-
-        // params for the twig template
-        $params = array('player' => $playerInfo, 'requests' => $requests);
-
-        return $this->render('NeikeqClubsBundle:Default:manager/requests.html.twig', $params);
-    }
-
-    public function requestAcceptAction(Request $request)
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER', null);
-
-        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
-
-        if (PlayerUtils::mustSelectCharacter($playerId)) {
-            return $this->redirect($this->generateUrl('kicks_clubs_character'));
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $role = PlayerUtils::getPlayerRole($playerId, $em);
-
-        if ($role != 'MANAGER') {
-            throw $this->createAccessDeniedException();
-        }
-
-        $clubId = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-            ->findOneMemberBy($playerId)->getClubId();
-
-        $acceptedMemberId = $request->request->get('player_id');
-        $acceptedMemberRequest = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-            ->findOnePendingMemberBy($acceptedMemberId);
-
+        $targetMemberId = $request->request->get('player_id');
         $error = null;
 
-        if (is_null($acceptedMemberRequest)) {
-            $error = 'The member request does not exists.';
-        } else {
-            if (ClubUtils::membersCount($clubId, $em) < 30) {
-                // The member was successfully accepted, add him to the club
-                ClubUtils::addClubMember($acceptedMemberId, $clubId, 'MEMBER', $em);
+        if (!is_null($targetMemberId)) {
+            $targetMemberRequest = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+                ->findOnePendingMemberBy($targetMemberId);
+
+            if (is_null($targetMemberRequest)) {
+                $error = 'The member request does not exists.';
             } else {
-                $error = 'The club is full and cannot accept more members.';
+                if ($request->request->has('accept')) {
+                    if (ClubUtils::membersCount($clubId, $em) < 30) {
+                        // The member was successfully accepted, add him to the club
+                        ClubUtils::addClubMember($targetMemberId, $clubId, 'MEMBER', $em);
+                    } else {
+                        $error = 'The club is full and cannot accept more members.';
+                    }
+                } else if ($request->request->has('reject')) {
+                    // Reject the request
+                    ClubUtils::addClubMember($targetMemberId, $clubId, 'REJECTED', $em);
+                }
             }
         }
 
@@ -109,78 +75,18 @@ class ManagerController extends Controller
 
         if (!is_null($error)) {
             $params['error'] = $error;
-        } else {
-            $acceptedMember = $em->getRepository('NeikeqClubsBundle:Characters')
-                ->findOneBy(array('id' => $acceptedMemberId));
-            $params['success'] = 'Member request accepted: ' . $acceptedMember->getName();
+        } else if (!is_null($targetMemberId)) {
+            $targetMember = $em->getRepository('NeikeqClubsBundle:Characters')
+                ->findOneBy(array('id' => $targetMemberId));
+            $params['success'] = 'Member request ' .
+                ($request->request->has('accept') ? 'accepted' : 'rejected') .
+                ': ' . $targetMember->getName();
         }
 
         return $this->render('NeikeqClubsBundle:Default:manager/requests.html.twig', $params);
     }
 
-    public function requestRejectAction(Request $request)
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER', null);
-
-        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
-
-        if (PlayerUtils::mustSelectCharacter($playerId)) {
-            return $this->redirect($this->generateUrl('kicks_clubs_character'));
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $role = PlayerUtils::getPlayerRole($playerId, $em);
-
-        if ($role != 'MANAGER') {
-            throw $this->createAccessDeniedException();
-        }
-
-        $clubId = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-            ->findOneMemberBy($playerId)->getClubId();
-
-        $acceptedMemberId = $request->request->get('player_id');
-        $acceptedMemberRequest = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-            ->findOnePendingMemberBy($acceptedMemberId);
-
-        $error = null;
-
-        if (is_null($acceptedMemberRequest)) {
-            $error = 'The member request does not exists.';
-        } else {
-            // Reject the request
-            ClubUtils::addClubMember($acceptedMemberId, $clubId, 'REJECTED', $em);
-        }
-
-        $pendingRequests = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-            ->findAllPendingMembersBy($clubId);
-
-        $requests = array();
-
-        foreach ($pendingRequests as $pendingRequest) {
-            $request = $em->getRepository('NeikeqClubsBundle:Characters')
-                ->findOneBy(array('id' => $pendingRequest->getId()));
-            array_push($requests, $request);
-        }
-
-        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
-        $playerInfo['role'] = $role;
-
-        // params for the twig template
-        $params = array('player' => $playerInfo, 'requests' => $requests);
-
-        if (!is_null($error)) {
-            $params['error'] = $error;
-        } else {
-            $acceptedMember = $em->getRepository('NeikeqClubsBundle:Characters')
-                ->findOneBy(array('id' => $acceptedMemberId));
-            $params['success'] = 'Member request rejected: ' . $acceptedMember->getName();
-        }
-
-        return $this->render('NeikeqClubsBundle:Default:manager/requests.html.twig', $params);
-    }
-
-    public function informationAction()
+    public function informationAction(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_USER', null);
 
@@ -204,57 +110,24 @@ class ManagerController extends Controller
         $club = $em->getRepository('NeikeqClubsBundle:Clubs')
             ->findOneBy(array('id' => $clubId));
 
-        $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
-        $playerInfo['role'] = $role;
+        $errors = array();
+        $success = array();
 
-        // params for the twig template
-        $params = array('player' => $playerInfo, 'club_description' => $club->getDescription());
-
-        return $this->render('NeikeqClubsBundle:Default:manager/information.html.twig', $params);
-    }
-
-    public function informationCheckAction(Request $request)
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER', null);
-
-        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
-
-        if (PlayerUtils::mustSelectCharacter($playerId)) {
-            return $this->redirect($this->generateUrl('kicks_clubs_character'));
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $role = PlayerUtils::getPlayerRole($playerId, $em);
-
-        if ($role != 'MANAGER') {
-            throw $this->createAccessDeniedException();
-        }
-
-        $clubId = $em->getRepository('NeikeqClubsBundle:ClubMembers')
-            ->findOneMemberBy($playerId)->getClubId();
-
-        $club = $em->getRepository('NeikeqClubsBundle:Clubs')
-            ->findOneBy(array('id' => $clubId));
-
-        $error = null;
-        $success = null;
-
-        if ($role == 'MANAGER') {
+        if ($request->request->has('description') && $role == 'MANAGER') {
             $description = $request->request->get('description');
 
             if (is_null($description)) {
-                $error = 'Missing description field.';
+                array_push($errors, 'Missing description field.');
             } else if (strlen($description) > 512 || empty($description)) {
                 // if the description length is not valid
-                $error = 'Club description was not specified or is too long.';
+                array_push($errors, 'Club description was not specified or is too long.');
             } else {
                 // Update the club description
                 $club->setDescription($description);
                 $em->persist($club);
                 $em->flush();
 
-                $success = 'The club description was updated successfully';
+                array_push($success, 'The club description was updated successfully');
             }
         }
 
@@ -262,13 +135,8 @@ class ManagerController extends Controller
         $playerInfo['role'] = $role;
 
         // params for the twig template
-        $params = array('player' => $playerInfo, 'club_description' => $club->getDescription());
-
-        if (!is_null($error)) {
-            $params['error'] = $error;
-        } else if (!is_null($success)) {
-            $params['success'] = $success;
-        }
+        $params = array('player' => $playerInfo, 'club_description' => $club->getDescription(),
+            'errors' => $errors, 'success' => $success);
 
         return $this->render('NeikeqClubsBundle:Default:manager/information.html.twig', $params);
     }
