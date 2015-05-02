@@ -62,9 +62,9 @@ class ManagerController extends Controller
         $requests = array();
 
         foreach ($pendingRequests as $pendingRequest) {
-            $request = $em->getRepository('NeikeqClubsBundle:Characters')
+            $current = $em->getRepository('NeikeqClubsBundle:Characters')
                 ->findOneBy(array('id' => $pendingRequest->getId()));
-            array_push($requests, $request);
+            array_push($requests, $current);
         }
 
         $playerInfo = PlayerUtils::getCharacterInfo($playerId, $em);
@@ -304,10 +304,10 @@ class ManagerController extends Controller
         $club = $em->getRepository('NeikeqClubsBundle:Clubs')
             ->findOneBy(array('id' => $clubId));
 
-        $newMembership = $request->request->get('membership');
-
         $errors = array();
         $success = array();
+
+        $newMembership = $request->request->get('membership');
 
         if (!is_null($newMembership)) {
             // if the membership mode is valid
@@ -331,5 +331,55 @@ class ManagerController extends Controller
             'errors' => $errors, 'success' => $success);
 
         return $this->render('NeikeqClubsBundle:Default:manager/advanced.html.twig', $params);
+    }
+
+    public function removeClubAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER', null);
+
+        $playerId = PlayerUtils::getSelectedPlayer($this->get('session'), $this->getUser());
+
+        if (PlayerUtils::mustSelectCharacter($playerId)) {
+            return $this->redirect($this->generateUrl('kicks_clubs_character'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $role = PlayerUtils::getPlayerRole($playerId, $em);
+
+        if ($role != 'MANAGER') {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($request->request->has('remove_club')) {
+            $clubId = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+                ->findOneMemberBy($playerId)->getClubId();
+
+            // Remove all members
+            $clubMembers = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+                ->findAllMembersBy($clubId);
+
+            foreach ($clubMembers as $clubMember) {
+                $em->remove($clubMember);
+            }
+
+            // Remove all pending requests
+            $pendingMembers = $em->getRepository('NeikeqClubsBundle:ClubMembers')
+                ->findAllPendingMembersBy($clubId);
+
+            foreach ($pendingMembers as $pendingMember) {
+                $em->remove($pendingMember);
+            }
+
+
+            $club = $em->getRepository('NeikeqClubsBundle:Clubs')
+                ->findOneBy(array('id' => $clubId));
+
+            // Remove the club
+            $em->remove($club);
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('kicks_clubs_clubs'));
     }
 }

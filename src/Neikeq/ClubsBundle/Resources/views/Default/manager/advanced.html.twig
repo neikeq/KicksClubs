@@ -14,6 +14,26 @@
     {% javascripts '@NeikeqClubsBundle/Resources/public/js/popover.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    <script>
+        $(document).ready(function(){
+            $('#removeButton').on('click', function (e) {
+                if ($('#removeCheckBox').prop('checked')) {
+                    $('#removeClubModal').modal();
+                } else {
+                    $('#removeButton').prop("disabled", true);
+                }
+            });
+
+            $('#removeCheckBox').on('change', function (e) {
+                if ($(this).prop('checked')) {
+                    $('#removeButton').prop("disabled", false);
+                } else {
+                    $('#removeButton').prop("disabled", true);
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block navbar %}
@@ -91,10 +111,55 @@
                 <div class="form-group">
                     <div class="col-xs-3"></div>
                     <div class="col-xs-9">
-                        <button type="submit" class="btn btn-lg btn-warning col-lg-5">Save</button>
+                        <button type="submit" class="btn btn-lg btn-success col-lg-5">Save</button>
                     </div>
                 </div>
             </form>
+
+            <legend>Remove Club</legend>
+
+            <div class="col-xs-2 text-right"></div>
+            <div style="margin-bottom: 10px" class="col-xs-9">
+                <label class="checkbox-inline">
+                    <input id="removeCheckBox" type="checkbox" name="remove_club" value="remove_club" autocomplete="off">
+                    I want to remove my club.
+                </label>
+            </div>
+            <div class="col-xs-2"></div>
+            <div class="col-xs-9">
+                <button id="removeButton" type="button" class="btn btn-lg btn-danger col-lg-5" autocomplete="off" disabled>
+                    Remove
+                </button>
+            </div>
         </div>
     </div>
+
+    <div id="removeClubModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Confirm to remove club</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Once you delete a club, there is no going back. Please be certain.</p>
+                </div>
+                <div class="modal-footer">
+                    <form class="form-horizontal form-club" role="form" method="post"
+                        action="{{ path('kicks_clubs_manager_remove_club') }}">
+                        <input type="hidden" name="remove_club" value="remove_club">
+                        
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            Confirm and Remove
+                        </button>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 {% endblock %}

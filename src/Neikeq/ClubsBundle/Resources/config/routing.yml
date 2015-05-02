@@ -89,3 +89,7 @@ kicks_clubs_manager_advanced:
 kicks_clubs_manager_membership_update:
     path:     /membership_update/
     defaults: { _controller: NeikeqClubsBundle:Manager:membershipUpdate }
+
+kicks_clubs_manager_remove_club:
+    path:     /remove_club/
+    defaults: { _controller: NeikeqClubsBundle:Manager:removeClub }

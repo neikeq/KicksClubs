@@ -13,7 +13,7 @@
         <div class="panel-body">
             <legend>Confirm to join club: {{ club_name }}</legend>
             <form action="{{ path('kicks_clubs_member_join_check') }}" method="post">
-                <input id ="inputClubId" type="hidden" name="club_id" value="{{ club_id }}">
+                <input type="hidden" name="club_id" value="{{ club_id }}">
                 <button type="submit" class="btn btn-primary btn-sm pull-right">Confirm</button>
                 <a class="btn btn-sm pull-right" href="{{ path('kicks_clubs_clubs') }}">Cancel</a>
             </form>
